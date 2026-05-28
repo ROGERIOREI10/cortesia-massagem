@@ -461,6 +461,201 @@
     font-size: 12px; color: var(--muted); margin: 3px 0;
   }
   .read-result .meta strong { color: var(--cream); font-weight: 500; }
+
+  /* ====== ADMIN LINK (discreto no rodapé) ====== */
+  .admin-link {
+    margin-top: auto;
+    padding: 20px 0 6px;
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: .25em;
+    color: rgba(160,124,74,.4);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-transform: lowercase;
+    transition: color .2s;
+  }
+  .admin-link:hover, .admin-link:active { color: var(--gold-bright); }
+
+  /* ====== MODAL PIN ====== */
+  .modal {
+    position: fixed; inset: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-bg {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,.75);
+    backdrop-filter: blur(4px);
+  }
+  .modal-card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(61,38,21,.95), rgba(26,13,5,.98));
+    border: 1px solid var(--gold);
+    border-radius: 18px;
+    padding: 28px 22px 22px;
+    width: 100%; max-width: 320px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.8), inset 0 1px 0 rgba(240,192,104,.2);
+  }
+  .modal-title {
+    font-family: 'Cinzel', serif; font-weight: 700;
+    letter-spacing: .25em; font-size: 12px;
+    color: var(--gold-bright);
+    margin: 0 0 16px; text-align: center;
+  }
+  .pin-input {
+    width: 100%;
+    background: rgba(0,0,0,.4);
+    border: 1px solid rgba(199,145,54,.4);
+    border-radius: 10px;
+    padding: 14px;
+    color: var(--cream);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: .6em; text-align: center;
+    margin-bottom: 14px;
+    outline: none;
+  }
+  .pin-input:focus { border-color: var(--gold-bright); }
+
+  /* ====== ADMIN HOME ====== */
+  .admin-header {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .admin-badge {
+    display: inline-block;
+    font-family: 'Cinzel', serif; font-weight: 700;
+    letter-spacing: .35em; font-size: 11px;
+    color: var(--wood-1);
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    padding: 6px 16px;
+    border-radius: 999px;
+    margin: 0;
+  }
+
+  /* ====== BRINDE: botões 5/10 min ====== */
+  .brinde-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .btn-brinde {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 28px 12px;
+    background: linear-gradient(180deg, rgba(61,38,21,.7), rgba(26,13,5,.7));
+    border: 1px solid var(--gold-deep);
+    border-radius: 16px;
+    color: var(--gold-bright);
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0,0,0,.5), inset 0 1px 0 rgba(240,192,104,.15);
+    transition: transform .08s, border-color .2s;
+  }
+  .btn-brinde:active { transform: scale(.97); }
+  .btn-brinde:hover { border-color: var(--gold-bright); }
+  .btn-brinde .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px; line-height: 1;
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .btn-brinde .lbl {
+    font-family: 'Cinzel', serif;
+    font-size: 11px; letter-spacing: .3em;
+    color: var(--cream); margin-top: 6px;
+  }
+
+  /* ====== FIDELIDADE ====== */
+  .cartoes-list {
+    margin-top: 14px;
+    display: flex; flex-direction: column;
+    gap: 8px;
+  }
+  .cartao-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(199,145,54,.25);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .cartao-item:hover { border-color: var(--gold); }
+  .cartao-item .seal-count {
+    width: 44px; height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,192,104,.2), transparent 70%);
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: var(--gold-bright);
+  }
+  .cartao-item .cartao-info {
+    flex: 1; min-width: 0;
+  }
+  .cartao-item .cartao-nome {
+    font-family: 'Playfair Display', serif; font-weight: 700;
+    color: var(--cream); font-size: 15px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .cartao-item .cartao-meta {
+    font-size: 11px; color: var(--muted);
+    margin-top: 2px;
+  }
+  .cartao-item.premio { border-color: var(--gold-bright); background: rgba(240,192,104,.08); }
+  .cartao-item.premio .cartao-meta { color: var(--gold-bright); }
+
+  .seal-bar {
+    display: flex; gap: 6px;
+    justify-content: center;
+    margin: 14px 0;
+  }
+  .seal {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.4);
+    border: 2px dashed rgba(199,145,54,.3);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(199,145,54,.3);
+    font-size: 16px;
+    transition: all .3s;
+  }
+  .seal.filled {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    border-color: var(--gold-bright);
+    color: var(--wood-1);
+    box-shadow: 0 2px 8px rgba(240,192,104,.4);
+  }
+  .seal.filled.new { animation: pop .5s ease-out; }
+  @keyframes pop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  .premio-banner {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: var(--wood-1);
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 14px 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: .12em;
+    box-shadow: 0 6px 20px rgba(240,192,104,.4);
+  }
+  .premio-banner .small {
+    display: block;
+    font-family: 'Cinzel', serif; font-weight: 700;
+    font-size: 10px; letter-spacing: .3em;
+    margin-bottom: 4px;
+  }
 </style>
 </head>
 <body>
@@ -556,6 +751,8 @@
       <div class="rule-row"><span class="val">Compra ≥ R$ 200</span><span class="min">10 MIN</span></div>
       <div class="rule-row"><span class="val" style="font-size:12px; color:var(--muted);">Validade do QR</span><span class="min" style="font-size:13px;">24 H</span></div>
     </div>
+
+    <button class="admin-link" onclick="abrirPin()">🔐 admin</button>
   </section>
 
   <!-- ====== GERAR ====== -->
@@ -639,10 +836,175 @@
         <div class="meta"></div>
       </div>
       <button id="btn-resgatar" class="btn" onclick="confirmarResgate()" style="display:none;">✓ Resgatar Cortesia</button>
+      <button id="btn-carimbar" class="btn" onclick="carimbarCartao()" style="display:none;">+ 1 Selo</button>
+      <button id="btn-resgatar-premio" class="btn" onclick="resgatarPremio()" style="display:none;">🎁 Resgatar Prêmio (15 min)</button>
       <button class="btn outline" onclick="lerOutra()">Ler Outra</button>
       <button class="btn ghost" onclick="parar('home')">Voltar ao início</button>
     </div>
   </section>
+
+  <!-- ====== ADMIN HOME ====== -->
+  <section id="admin" class="screen">
+    <button class="back" onclick="show('home')">← VOLTAR</button>
+    <header class="admin-header">
+      <p class="admin-badge">🔐 ÁREA ADMIN</p>
+    </header>
+
+    <button class="home-btn" onclick="show('brinde')">
+      <div class="home-btn-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="8" width="18" height="13" rx="2"/>
+          <path d="M12 8v13"/><path d="M19 12H5"/>
+          <path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="home-btn-title">BRINDE EXPRESSO</h2>
+        <p class="home-btn-sub">Cortesia sem precisar de valor</p>
+      </div>
+    </button>
+
+    <button class="home-btn" onclick="show('fidelidade')">
+      <div class="home-btn-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="home-btn-title">FIDELIDADE</h2>
+        <p class="home-btn-sub">Cartões de selos dos clientes</p>
+      </div>
+    </button>
+  </section>
+
+  <!-- ====== BRINDE ====== -->
+  <section id="brinde" class="screen">
+    <button class="back" onclick="show('admin')">← VOLTAR</button>
+
+    <div id="brinde-form">
+      <p style="text-align:center; font-family:'Cinzel',serif; letter-spacing:.25em; font-size:11px; color:var(--gold-bright); margin: 8px 0 16px;">
+        SELECIONE O TEMPO DO BRINDE
+      </p>
+      <div class="brinde-grid">
+        <button class="btn-brinde" onclick="gerarBrinde(5)">
+          <span class="num">5</span>
+          <span class="lbl">MINUTOS</span>
+        </button>
+        <button class="btn-brinde" onclick="gerarBrinde(10)">
+          <span class="num">10</span>
+          <span class="lbl">MINUTOS</span>
+        </button>
+      </div>
+      <p style="text-align:center; color:var(--muted); font-size:12px; margin-top:18px; line-height:1.5;">
+        Brinde liberado pelo admin.<br>Não exige valor de compra.
+      </p>
+    </div>
+
+    <div id="brinde-resultado" style="display:none;">
+      <article class="cortesia-card">
+        <div class="headline">
+          <span class="line-1">VOCÊ GANHOU</span>
+          <span class="line-2">UMA MASSAGEM</span>
+          <span class="gratis">Grátis</span>
+        </div>
+
+        <div class="foto-wrap">
+          <img src="cadeira.png" class="foto-cadeira" alt="Cadeira de massagem"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="foto-fallback" style="display:none;">SALVE<br>cadeira.png<br>NA PASTA</div>
+          <span class="min-overlay"><span id="b-min">5</span> MIN</span>
+        </div>
+
+        <div class="qr-frame">
+          <div id="qrcode-brinde"></div>
+        </div>
+
+        <div class="meta-row">
+          <div class="meta-item">
+            <div class="k">Tipo</div>
+            <div class="v">🎁 BRINDE</div>
+          </div>
+          <div class="meta-item">
+            <div class="k">Válido até</div>
+            <div class="v" id="b-validade">—</div>
+          </div>
+        </div>
+
+        <div class="footer-brand"><span class="name">REI DOS CHAVEIROS</span></div>
+      </article>
+
+      <button class="btn outline" onclick="show('brinde')">Novo Brinde</button>
+      <button class="btn ghost" onclick="show('admin')">Voltar ao admin</button>
+    </div>
+  </section>
+
+  <!-- ====== FIDELIDADE ====== -->
+  <section id="fidelidade" class="screen">
+    <button class="back" onclick="voltarFidelidade()">← VOLTAR</button>
+
+    <!-- Menu principal: lista de cartões + ações -->
+    <div id="fid-menu">
+      <p style="text-align:center; font-family:'Cinzel',serif; letter-spacing:.25em; font-size:11px; color:var(--gold-bright); margin: 8px 0 4px;">
+        CARTÕES DE FIDELIDADE
+      </p>
+      <p style="text-align:center; color:var(--muted); font-size:11px; margin: 0 0 14px;">
+        5 selos = 15 min de massagem grátis
+      </p>
+
+      <button class="btn" onclick="abrirNovoCartao()">+ Novo Cartão</button>
+      <div id="cartoes-list" class="cartoes-list"></div>
+    </div>
+
+    <!-- Form de novo cartão -->
+    <div id="fid-novo" style="display:none;">
+      <div class="field">
+        <label class="field-label" for="card-nome">Nome do cliente</label>
+        <input type="text" id="card-nome" placeholder="Maria"
+               style="width:100%; padding:14px 16px; background:rgba(0,0,0,.4); border:1px solid rgba(199,145,54,.4); border-radius:10px; color:var(--cream); font-family:'Playfair Display',serif; font-size:18px; outline:none;">
+        <div id="card-erro"></div>
+      </div>
+      <button class="btn" onclick="criarCartao()">Criar Cartão</button>
+      <button class="btn ghost" onclick="voltarFidelidade()">Cancelar</button>
+    </div>
+
+    <!-- Card gerado: mostra QR pessoal pro cliente fotografar -->
+    <div id="fid-cartao" style="display:none;">
+      <article class="cortesia-card">
+        <div class="headline">
+          <span class="line-1">CARTÃO FIDELIDADE</span>
+          <span class="line-2" id="fid-nome" style="font-size:32px; margin-top:6px;">—</span>
+        </div>
+
+        <div class="seal-bar" id="fid-seals"></div>
+
+        <div class="qr-frame">
+          <div id="qrcode-fid"></div>
+        </div>
+
+        <p style="text-align:center; color:var(--muted); font-size:11px; margin: 10px 0 0; line-height:1.5;">
+          Cliente fotografa esse QR e mostra<br>a cada massagem pra ganhar 1 selo.
+        </p>
+
+        <div class="footer-brand"><span class="name">REI DOS CHAVEIROS</span></div>
+      </article>
+      <button class="btn outline" onclick="voltarFidelidade()">Voltar à lista</button>
+      <button class="btn ghost" onclick="excluirCartaoAtual()" style="color:var(--bad);">Excluir cartão</button>
+    </div>
+  </section>
+</div>
+
+<!-- ====== MODAL PIN ====== -->
+<div id="pin-modal" class="modal" style="display:none;">
+  <div class="modal-bg" onclick="fecharPin()"></div>
+  <div class="modal-card">
+    <p class="modal-title">PIN ADMINISTRADOR</p>
+    <input id="pin-input" type="tel" inputmode="numeric" pattern="[0-9]*"
+           maxlength="4" placeholder="••••" class="pin-input"
+           autocomplete="off">
+    <div id="pin-erro" style="font-size:12px; color:var(--bad); text-align:center; min-height:18px; margin-bottom:8px;"></div>
+    <button class="btn" onclick="verificarPin()">Entrar</button>
+    <button class="btn ghost" onclick="fecharPin()">Cancelar</button>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -686,6 +1048,8 @@
     document.getElementById(id).classList.add('active');
     if (id === 'ler') prepararScanner();
     if (id === 'gerar') resetGerarForm();
+    if (id === 'brinde') resetBrinde();
+    if (id === 'fidelidade') showFidelidade();
   }
 
   function parseValor(str) {
@@ -725,6 +1089,227 @@
     salvarResgates(r);
   }
   let cortesiaAtual = null;
+
+  // ====== ADMIN PIN ======
+  const ADMIN_PIN = '2580'; // <— TROQUE AQUI SE QUISER OUTRO PIN
+
+  function abrirPin() {
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-erro').textContent = '';
+    document.getElementById('pin-modal').style.display = 'flex';
+    setTimeout(() => document.getElementById('pin-input').focus(), 100);
+  }
+  function fecharPin() {
+    document.getElementById('pin-modal').style.display = 'none';
+  }
+  function verificarPin() {
+    const v = document.getElementById('pin-input').value;
+    if (v === ADMIN_PIN) {
+      fecharPin();
+      show('admin');
+    } else {
+      document.getElementById('pin-erro').textContent = 'PIN incorreto';
+      document.getElementById('pin-input').value = '';
+    }
+  }
+  document.getElementById('pin-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); verificarPin(); }
+  });
+
+  // ====== BRINDE EXPRESSO ======
+  function resetBrinde() {
+    document.getElementById('brinde-form').style.display = '';
+    document.getElementById('brinde-resultado').style.display = 'none';
+  }
+  function gerarBrinde(minutos) {
+    const ts = Date.now();
+    const id = idCurto();
+    const base = window.location.origin + window.location.pathname;
+    const payload = `${base}?v=0&m=${minutos}&t=${ts}&id=${id}&brinde=1`;
+
+    document.getElementById('qrcode-brinde').innerHTML = '';
+    new QRCode(document.getElementById('qrcode-brinde'), {
+      text: payload, width: 180, height: 180,
+      correctLevel: QRCode.CorrectLevel.M,
+      colorDark: '#1a0d05', colorLight: '#f5e6c8'
+    });
+    document.getElementById('b-min').textContent = minutos;
+    document.getElementById('b-validade').textContent = formatData(ts + 24*3600*1000);
+    document.getElementById('brinde-form').style.display = 'none';
+    document.getElementById('brinde-resultado').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ====== FIDELIDADE (cartões + selos) ======
+  const CARTOES_KEY = 'cartoes_fidelidade';
+  const SELOS_OBJETIVO = 5;
+  const PREMIO_MIN = 15;
+
+  function getCartoes() {
+    try { return JSON.parse(localStorage.getItem(CARTOES_KEY)) || {}; }
+    catch { return {}; }
+  }
+  function salvarCartoes(map) { localStorage.setItem(CARTOES_KEY, JSON.stringify(map)); }
+  function getCartao(id) { return getCartoes()[id]; }
+  function salvarCartao(cartao) {
+    const c = getCartoes(); c[cartao.id] = cartao; salvarCartoes(c);
+  }
+  function excluirCartao(id) {
+    const c = getCartoes(); delete c[id]; salvarCartoes(c);
+  }
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  let cartaoAtualId = null;
+  let cartaoLidoAtual = null;
+
+  function showFidelidade() {
+    document.getElementById('fid-menu').style.display = '';
+    document.getElementById('fid-novo').style.display = 'none';
+    document.getElementById('fid-cartao').style.display = 'none';
+    renderListaCartoes();
+  }
+  function voltarFidelidade() {
+    const novoVis = document.getElementById('fid-novo').style.display !== 'none';
+    const cartaoVis = document.getElementById('fid-cartao').style.display !== 'none';
+    if (novoVis || cartaoVis) {
+      showFidelidade();
+    } else {
+      show('admin');
+    }
+  }
+  function renderListaCartoes() {
+    const list = document.getElementById('cartoes-list');
+    const c = getCartoes();
+    const ids = Object.keys(c).sort((a, b) => (c[b].criadoEm || 0) - (c[a].criadoEm || 0));
+    if (ids.length === 0) {
+      list.innerHTML = '<p style="text-align:center; color:var(--muted); font-size:12px; padding:20px 0;">Nenhum cartão ainda.<br>Toque em "+ Novo Cartão" pra criar o primeiro.</p>';
+      return;
+    }
+    list.innerHTML = ids.map(id => {
+      const card = c[id];
+      const premio = card.selos >= SELOS_OBJETIVO;
+      const faltam = SELOS_OBJETIVO - card.selos;
+      const sub = premio
+        ? '🎁 PRÊMIO LIBERADO'
+        : `Faltam ${faltam} selo${faltam === 1 ? '' : 's'}`;
+      return `
+        <div class="cartao-item ${premio ? 'premio' : ''}" onclick="abrirCartao('${id}')">
+          <div class="seal-count">${card.selos}/${SELOS_OBJETIVO}</div>
+          <div class="cartao-info">
+            <div class="cartao-nome">${escapeHTML(card.nome)}</div>
+            <div class="cartao-meta">${sub}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  function abrirNovoCartao() {
+    document.getElementById('fid-menu').style.display = 'none';
+    document.getElementById('fid-novo').style.display = '';
+    document.getElementById('card-nome').value = '';
+    document.getElementById('card-erro').innerHTML = '';
+    setTimeout(() => document.getElementById('card-nome').focus(), 100);
+  }
+  function criarCartao() {
+    const nome = document.getElementById('card-nome').value.trim();
+    const erro = document.getElementById('card-erro');
+    if (!nome) {
+      erro.innerHTML = '<div class="error">Digite o nome do cliente.</div>';
+      return;
+    }
+    const id = idCurto();
+    const cartao = { id, nome, selos: 0, criadoEm: Date.now(), premiosResgatados: 0 };
+    salvarCartao(cartao);
+    abrirCartao(id);
+  }
+  function abrirCartao(id) {
+    const card = getCartao(id);
+    if (!card) { voltarFidelidade(); return; }
+    cartaoAtualId = id;
+    document.getElementById('fid-menu').style.display = 'none';
+    document.getElementById('fid-novo').style.display = 'none';
+    document.getElementById('fid-cartao').style.display = '';
+    document.getElementById('fid-nome').textContent = card.nome;
+
+    // Renderiza selos
+    const seals = document.getElementById('fid-seals');
+    seals.innerHTML = '';
+    for (let i = 0; i < SELOS_OBJETIVO; i++) {
+      const seal = document.createElement('div');
+      seal.className = 'seal' + (i < card.selos ? ' filled' : '');
+      seal.textContent = i < card.selos ? '★' : (i + 1);
+      seals.appendChild(seal);
+    }
+
+    // QR pessoal do cartão
+    const base = window.location.origin + window.location.pathname;
+    const payload = `${base}?card=1&id=${card.id}&n=${encodeURIComponent(card.nome)}`;
+    document.getElementById('qrcode-fid').innerHTML = '';
+    new QRCode(document.getElementById('qrcode-fid'), {
+      text: payload, width: 180, height: 180,
+      correctLevel: QRCode.CorrectLevel.M,
+      colorDark: '#1a0d05', colorLight: '#f5e6c8'
+    });
+  }
+  function excluirCartaoAtual() {
+    if (!cartaoAtualId) return;
+    if (!confirm('Excluir este cartão? Os selos serão perdidos.')) return;
+    excluirCartao(cartaoAtualId);
+    cartaoAtualId = null;
+    voltarFidelidade();
+  }
+
+  // ====== Ações ao ler cartão na poltrona ======
+  function carimbarCartao() {
+    if (!cartaoLidoAtual) return;
+    const c = getCartao(cartaoLidoAtual.id);
+    if (!c) return;
+    c.selos = Math.min((c.selos || 0) + 1, SELOS_OBJETIVO);
+    c.ultimoSelo = Date.now();
+    salvarCartao(c);
+    cartaoLidoAtual = c;
+
+    const cardEl = document.getElementById('resultado-card');
+    cardEl.classList.remove('invalid', 'redeemed');
+    const $btnCarimbar = document.getElementById('btn-carimbar');
+    const $btnPremio = document.getElementById('btn-resgatar-premio');
+    if (c.selos >= SELOS_OBJETIVO) {
+      $btnCarimbar.style.display = 'none';
+      $btnPremio.style.display = '';
+      cardEl.querySelector('.status').textContent = '🎁 PRÊMIO LIBERADO';
+      cardEl.querySelector('.big').textContent = c.nome;
+      cardEl.querySelector('.minlbl').textContent = `${c.selos}/${SELOS_OBJETIVO} SELOS — ${PREMIO_MIN} MIN`;
+      cardEl.querySelector('.sub').textContent = `Massagem de ${PREMIO_MIN} minutos liberada!`;
+    } else {
+      cardEl.querySelector('.minlbl').textContent = `${c.selos}/${SELOS_OBJETIVO} SELOS`;
+      cardEl.querySelector('.sub').textContent = `Faltam ${SELOS_OBJETIVO - c.selos} selo${SELOS_OBJETIVO - c.selos === 1 ? '' : 's'} pra ganhar massagem.`;
+      const $metas = cardEl.querySelectorAll('.meta');
+      $metas[1].innerHTML = `Último selo: <strong>${formatData(c.ultimoSelo)}</strong>`;
+    }
+  }
+  function resgatarPremio() {
+    if (!cartaoLidoAtual) return;
+    const c = getCartao(cartaoLidoAtual.id);
+    if (!c) return;
+    c.selos = 0;
+    c.premiosResgatados = (c.premiosResgatados || 0) + 1;
+    c.ultimoPremio = Date.now();
+    salvarCartao(c);
+    cartaoLidoAtual = c;
+
+    document.getElementById('btn-resgatar-premio').style.display = 'none';
+    const cardEl = document.getElementById('resultado-card');
+    cardEl.classList.add('redeemed');
+    cardEl.querySelector('.status').textContent = '✓ PRÊMIO RESGATADO';
+    cardEl.querySelector('.big').textContent = `${PREMIO_MIN}`;
+    cardEl.querySelector('.minlbl').textContent = `MIN ENTREGUES`;
+    cardEl.querySelector('.sub').textContent = 'Cartão zerado. Boa massagem!';
+    const $metas = cardEl.querySelectorAll('.meta');
+    $metas[0].innerHTML = `Cartão de <strong>${escapeHTML(c.nome)}</strong>`;
+    $metas[1].innerHTML = `${c.premiosResgatados} prêmio${c.premiosResgatados === 1 ? '' : 's'} no total`;
+  }
 
   const valorInput = document.getElementById('valor');
   valorInput.addEventListener('input', e => {
@@ -862,12 +1447,18 @@
       let url;
       try { url = new URL(texto); }
       catch { url = new URL(texto, window.location.origin); }
-      const v = parseFloat(url.searchParams.get('v'));
-      const m = parseInt(url.searchParams.get('m'), 10);
-      const t = parseInt(url.searchParams.get('t'), 10);
-      const id = url.searchParams.get('id') || '';
+      const params = url.searchParams;
+
+      if (params.get('card') === '1') {
+        return { type: 'card', id: params.get('id') || '', nome: params.get('n') || '' };
+      }
+      const v = parseFloat(params.get('v'));
+      const m = parseInt(params.get('m'), 10);
+      const t = parseInt(params.get('t'), 10);
+      const id = params.get('id') || '';
+      const brinde = params.get('brinde') === '1';
       if (isNaN(v) || isNaN(m) || isNaN(t)) return null;
-      return { v, m, t, id };
+      return { type: brinde ? 'brinde' : 'cortesia', v, m, t, id, brinde };
     } catch { return null; }
   }
   function mostrarResultado(texto) {
@@ -879,10 +1470,15 @@
     const $sub = card.querySelector('.sub');
     const $metas = card.querySelectorAll('.meta');
     const $btnResg = document.getElementById('btn-resgatar');
+    const $btnCarimbar = document.getElementById('btn-carimbar');
+    const $btnPremio = document.getElementById('btn-resgatar-premio');
     $btnResg.style.display = 'none';
     $btnResg.disabled = false;
     $btnResg.textContent = '✓ Resgatar Cortesia';
+    $btnCarimbar.style.display = 'none';
+    $btnPremio.style.display = 'none';
     cortesiaAtual = null;
+    cartaoLidoAtual = null;
 
     const data = parsePayload(texto);
     if (!data) {
@@ -892,10 +1488,49 @@
       $minlbl.textContent = '';
       $sub.textContent = 'Este QR não é uma cortesia válida.';
       $metas[0].innerHTML = ''; $metas[1].innerHTML = '';
+    } else if (data.type === 'card') {
+      // ====== Cartão de Fidelidade ======
+      const cartao = getCartao(data.id);
+      if (!cartao) {
+        card.classList.add('invalid');
+        $status.textContent = '⚠ CARTÃO DESCONHECIDO';
+        $big.textContent = data.nome || '—';
+        $minlbl.textContent = 'NÃO CADASTRADO';
+        $sub.textContent = 'Este cartão não foi criado neste celular.';
+        $metas[0].innerHTML = ''; $metas[1].innerHTML = '';
+      } else {
+        cartaoLidoAtual = cartao;
+        const completo = cartao.selos >= SELOS_OBJETIVO;
+        if (completo) {
+          $status.textContent = '🎁 PRÊMIO LIBERADO';
+          $big.textContent = cartao.nome;
+          $minlbl.textContent = `${cartao.selos}/${SELOS_OBJETIVO} SELOS — ${PREMIO_MIN} MIN`;
+          $sub.textContent = `Massagem de ${PREMIO_MIN} minutos liberada!`;
+          $metas[0].innerHTML = `Cartão de <strong>${escapeHTML(cartao.nome)}</strong>`;
+          const pr = cartao.premiosResgatados || 0;
+          $metas[1].innerHTML = pr > 0 ? `${pr} prêmio${pr === 1 ? '' : 's'} já resgatado${pr === 1 ? '' : 's'}` : '';
+          $btnPremio.style.display = '';
+        } else {
+          $status.textContent = '⭐ CARTÃO FIDELIDADE';
+          $big.textContent = cartao.nome;
+          $minlbl.textContent = `${cartao.selos}/${SELOS_OBJETIVO} SELOS`;
+          const faltam = SELOS_OBJETIVO - cartao.selos;
+          $sub.textContent = `Faltam ${faltam} selo${faltam === 1 ? '' : 's'} pra ganhar massagem.`;
+          $metas[0].innerHTML = `Cartão de <strong>${escapeHTML(cartao.nome)}</strong>`;
+          $metas[1].innerHTML = cartao.ultimoSelo
+            ? `Último selo: <strong>${formatData(cartao.ultimoSelo)}</strong>`
+            : '';
+          $btnCarimbar.style.display = '';
+        }
+      }
     } else {
+      // ====== Cortesia ou Brinde ======
       const validade = data.t + 24*3600*1000;
       const expirado = Date.now() > validade;
       const resg = buscarResgate(data.id);
+      const origemHtml = data.brinde
+        ? '🎁 Brinde do admin'
+        : `Compra: <strong>${formatBRL(data.v)}</strong>`;
 
       if (expirado) {
         card.classList.add('invalid');
@@ -903,7 +1538,7 @@
         $big.textContent = `${data.m} min`;
         $minlbl.textContent = '';
         $sub.textContent = 'Esta cortesia passou de 24 horas.';
-        $metas[0].innerHTML = `Compra: <strong>${formatBRL(data.v)}</strong>`;
+        $metas[0].innerHTML = origemHtml;
         $metas[1].innerHTML = `Expirou em <strong>${formatData(validade)}</strong>`;
       } else if (resg) {
         card.classList.add('redeemed');
@@ -911,14 +1546,14 @@
         $big.textContent = `${data.m}`;
         $minlbl.textContent = `MIN — JÁ UTILIZADA`;
         $sub.textContent = `Cortesia já foi usada.`;
-        $metas[0].innerHTML = `Compra: <strong>${formatBRL(data.v)}</strong>`;
+        $metas[0].innerHTML = origemHtml;
         $metas[1].innerHTML = `Resgatada em <strong>${formatData(resg.at)}</strong>`;
       } else {
-        $status.textContent = '✅ CORTESIA VÁLIDA';
+        $status.textContent = data.brinde ? '🎁 BRINDE LIBERADO' : '✅ CORTESIA VÁLIDA';
         $big.textContent = `${data.m}`;
         $minlbl.textContent = `MINUTOS DE MASSAGEM`;
         $sub.textContent = '"Aproveite o seu momento."';
-        $metas[0].innerHTML = `Compra: <strong>${formatBRL(data.v)}</strong>`;
+        $metas[0].innerHTML = origemHtml;
         $metas[1].innerHTML = `Válido até <strong>${formatData(validade)}</strong>`;
         cortesiaAtual = data;
         $btnResg.style.display = '';
@@ -949,7 +1584,9 @@
 
   (function checarURL() {
     const params = new URLSearchParams(window.location.search);
-    if (params.has('v') && params.has('m') && params.has('t')) {
+    const isCortesia = params.has('v') && params.has('m') && params.has('t');
+    const isCard = params.get('card') === '1';
+    if (isCortesia || isCard) {
       show('ler');
       setTimeout(() => {
         if (scanner) { try { scanner.stop().then(()=>{ scanner=null; }); } catch(e){} }
