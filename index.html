@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cortesia Massagem · Rei dos Chaveiros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@500;700&family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wood-1: #0a0502;
+    --wood-2: #1a0d05;
+    --wood-3: #2a1a0c;
+    --wood-4: #3d2615;
+    --gold-deep: #8a5a1f;
+    --gold: #c79136;
+    --gold-bright: #f0c068;
+    --gold-pale: #f8e3b3;
+    --cream: #f5e6c8;
+    --muted: #a07c4a;
+    --bad: #c94545;
+    --good: #4caf7a;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--wood-1);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(199,145,54,0.18), transparent 60%),
+      radial-gradient(ellipse 90% 80% at 50% 110%, rgba(138,90,31,0.20), transparent 50%),
+      linear-gradient(180deg, var(--wood-2) 0%, var(--wood-1) 100%);
+    z-index: -2;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      repeating-linear-gradient(92deg,
+        rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px,
+        rgba(255,200,100,0.018) 2px, rgba(255,200,100,0.018) 4px,
+        rgba(0,0,0,0.035) 4px, rgba(0,0,0,0.035) 7px);
+    mix-blend-mode: overlay;
+    opacity: .6;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .palm {
+    position: fixed; bottom: -20px;
+    width: 140px; height: 240px;
+    opacity: .28; pointer-events: none; z-index: 0;
+  }
+  .palm.left  { left: -40px; transform: scaleX(-1); }
+  .palm.right { right: -40px; }
+
+  .sparkles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .spark {
+    position: absolute; width: 3px; height: 3px;
+    background: var(--gold-bright); border-radius: 50%;
+    box-shadow: 0 0 6px var(--gold-bright), 0 0 12px rgba(240,192,104,.6);
+    animation: float 8s linear infinite, twinkle 2.4s ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes float {
+    0%   { transform: translateY(20vh) translateX(0); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
+  }
+  @keyframes twinkle {
+    0%, 100% { box-shadow: 0 0 4px var(--gold-bright), 0 0 8px rgba(240,192,104,.4); }
+    50%      { box-shadow: 0 0 10px var(--gold-bright), 0 0 18px rgba(240,192,104,.8); }
+  }
+
+  .app {
+    position: relative; z-index: 2;
+    max-width: 440px; margin: 0 auto;
+    padding: 14px 16px 24px;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  header.brand {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .crown {
+    width: 38px; height: 38px;
+    margin: 0 auto 4px;
+    display: block;
+    filter: drop-shadow(0 2px 6px rgba(240,192,104,.4));
+  }
+  .brand-title {
+    font-family: 'Cinzel', serif; font-weight: 700;
+    letter-spacing: .35em; font-size: 11px;
+    color: var(--gold-bright); margin: 0;
+  }
+
+  .screen { display: none; flex: 1; flex-direction: column; }
+  .screen.active { display: flex; animation: fadeUp .45s ease-out; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .btn {
+    display: block; width: 100%;
+    padding: 14px 22px; margin-bottom: 10px;
+    background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%);
+    color: #2a1607;
+    border: 1px solid var(--gold-pale);
+    border-radius: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: .12em;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 0 rgba(0,0,0,.15);
+    transition: transform .08s;
+    text-transform: uppercase;
+  }
+  .btn:active { transform: translateY(2px); }
+  .btn.outline {
+    background: transparent; color: var(--gold-bright);
+    border: 1px solid var(--gold-deep);
+    box-shadow: inset 0 0 0 1px rgba(199,145,54,.15);
+  }
+  .btn.ghost {
+    background: transparent; border: none; color: var(--muted);
+    box-shadow: none; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; letter-spacing: .04em;
+    text-transform: none; padding: 8px;
+  }
+
+  /* ====== HOME ====== */
+  .home-btn {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px; margin-bottom: 10px;
+    background: linear-gradient(180deg, rgba(61,38,21,.7), rgba(26,13,5,.7));
+    border: 1px solid var(--gold-deep);
+    border-radius: 14px;
+    color: var(--gold-bright);
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,.4), inset 0 1px 0 rgba(240,192,104,.12);
+    text-align: left;
+  }
+  .home-btn:active { transform: scale(.985); }
+  .home-btn-circle {
+    width: 48px; height: 48px; flex-shrink: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,192,104,.18) 0%, transparent 70%);
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .home-btn-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: .12em; margin: 0; line-height: 1;
+  }
+  .home-btn-sub {
+    font-size: 11px; color: var(--muted);
+    letter-spacing: .04em; margin: 4px 0 0;
+  }
+
+  .rules {
+    margin-top: 14px; padding: 14px 16px;
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(199,145,54,.25);
+    border-radius: 12px;
+  }
+  .rules-title {
+    font-family: 'Cinzel', serif; font-weight: 500;
+    letter-spacing: .3em; color: var(--gold-bright);
+    font-size: 10px; margin: 0 0 8px; text-align: center;
+  }
+  .rule-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px dashed rgba(199,145,54,.2);
+  }
+  .rule-row:last-child { border: none; }
+  .rule-row .val { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--cream); font-size: 13px; }
+  .rule-row .min { font-family: 'Bebas Neue', sans-serif; color: var(--gold-bright); font-size: 18px; letter-spacing: .1em; }
+
+  /* ====== FORM ====== */
+  .back {
+    background: transparent; border: none;
+    color: var(--muted); font-family: 'Cinzel', serif;
+    font-size: 11px; letter-spacing: .25em;
+    padding: 0 0 10px; cursor: pointer; text-align: left;
+    align-self: flex-start;
+  }
+  .field {
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(199,145,54,.3);
+    border-radius: 12px; padding: 16px;
+    margin-bottom: 14px;
+  }
+  .field-label {
+    font-family: 'Cinzel', serif;
+    letter-spacing: .25em; font-size: 10px;
+    color: var(--gold-bright); text-transform: uppercase;
+    margin-bottom: 8px; display: block;
+  }
+  .input-money { display: flex; align-items: baseline; gap: 8px; }
+  .input-money .symbol {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--gold-bright);
+  }
+  .input-money input {
+    flex: 1; background: transparent; border: none; outline: none;
+    color: var(--cream);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px; letter-spacing: .04em;
+    padding: 2px 0;
+    border-bottom: 2px solid rgba(199,145,54,.4);
+    transition: border-color .2s;
+  }
+  .input-money input:focus { border-color: var(--gold-bright); }
+
+  .error {
+    background: rgba(201,69,69,.15); color: var(--bad);
+    padding: 8px 12px; border: 1px solid rgba(201,69,69,.3);
+    border-radius: 8px; margin-top: 10px;
+    font-size: 12px; text-align: center;
+  }
+
+  /* ====== CARD DE CORTESIA ====== */
+  .cortesia-card {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(240,192,104,.12), transparent 60%),
+      linear-gradient(180deg, rgba(61,38,21,.85), rgba(26,13,5,.95));
+    border: 1px solid var(--gold);
+    border-radius: 18px;
+    padding: 18px 16px 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 14px 40px rgba(0,0,0,.6),
+      inset 0 1px 0 rgba(240,192,104,.2),
+      0 0 0 3px rgba(0,0,0,.4),
+      0 0 0 4px rgba(199,145,54,.4);
+  }
+  .cortesia-card::before {
+    content: '';
+    position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
+    border: 1px solid rgba(199,145,54,.3);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+
+  .headline {
+    text-align: center; line-height: 1;
+    margin: 4px 0 10px;
+  }
+  .headline .line-1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: .25em;
+    color: var(--cream); display: block; margin-bottom: 3px;
+  }
+  .headline .line-2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; letter-spacing: .14em;
+    color: var(--cream); display: block;
+  }
+  .headline .gratis {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 700;
+    font-size: 64px; display: block; line-height: 1;
+    margin-top: -2px;
+    background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 60%, var(--gold-deep) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.6));
+  }
+  @media (max-width: 360px) {
+    .headline .gratis { font-size: 52px; }
+    .headline .line-2 { font-size: 22px; }
+  }
+
+  /* ====== FOTO ====== */
+  .foto-wrap {
+    position: relative;
+    width: 100%; max-width: 220px;
+    margin: 4px auto 8px;
+    border-radius: 14px;
+    background: radial-gradient(ellipse at center top, #fffaf0, #f5e6c8 70%, #d4a04c 100%);
+    padding: 6px;
+    border: 1px solid var(--gold-bright);
+    box-shadow: 0 6px 18px rgba(0,0,0,.5), inset 0 0 12px rgba(199,145,54,.25);
+  }
+  .foto-cadeira {
+    width: 100%; height: auto; display: block;
+    border-radius: 10px;
+    mix-blend-mode: multiply;
+  }
+  .min-overlay {
+    position: absolute;
+    top: -10px; right: -10px;
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: var(--wood-1);
+    padding: 8px 14px 6px;
+    border-radius: 999px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: .08em; line-height: 1;
+    border: 2px solid var(--wood-1);
+    box-shadow: 0 4px 12px rgba(0,0,0,.6);
+  }
+  .foto-fallback {
+    width: 100%; aspect-ratio: 1;
+    background: linear-gradient(180deg, #f5e6c8, #c79136);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif; font-size: 11px;
+    color: var(--wood-2); text-align: center; padding: 12px;
+    letter-spacing: .2em;
+  }
+
+  /* ====== QR ====== */
+  .qr-frame {
+    margin: 8px auto 10px;
+    width: fit-content;
+    padding: 10px;
+    background: var(--cream);
+    border-radius: 10px;
+    border: 1px solid var(--gold-deep);
+    box-shadow: 0 4px 14px rgba(0,0,0,.5), inset 0 0 0 1px var(--gold-bright);
+  }
+  .qr-frame img, .qr-frame canvas { display: block; }
+
+  /* ====== META ====== */
+  .meta-row {
+    display: flex; justify-content: space-around; gap: 8px;
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px dashed rgba(199,145,54,.3);
+  }
+  .meta-item { text-align: center; }
+  .meta-item .k {
+    font-family: 'Cinzel', serif;
+    font-size: 8px; letter-spacing: .3em;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .meta-item .v {
+    font-family: 'Playfair Display', serif; font-weight: 700;
+    color: var(--cream); font-size: 13px; margin-top: 2px;
+  }
+
+  .footer-brand {
+    text-align: center; margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(199,145,54,.2);
+  }
+  .footer-brand .name {
+    font-family: 'Cinzel', serif; font-weight: 700;
+    letter-spacing: .4em; font-size: 10px;
+    color: var(--gold-bright);
+  }
+
+  /* ====== SCANNER ====== */
+  .scanner-frame {
+    width: 100%; aspect-ratio: 1;
+    background: #000; border-radius: 14px;
+    overflow: hidden; position: relative;
+    border: 1px solid var(--gold-deep);
+    box-shadow: 0 4px 14px rgba(0,0,0,.5);
+  }
+  #reader { width: 100%; }
+  #reader video { width: 100% !important; height: auto !important; }
+  .scanner-corners { position: absolute; inset: 0; pointer-events: none; }
+  .scanner-corners::before, .scanner-corners::after,
+  .scanner-corners > span::before, .scanner-corners > span::after {
+    content: ''; position: absolute;
+    width: 24px; height: 24px;
+    border: 3px solid var(--gold-bright);
+  }
+  .scanner-corners::before { top: 14px; left: 14px; border-right: none; border-bottom: none; }
+  .scanner-corners::after  { top: 14px; right: 14px; border-left: none; border-bottom: none; }
+  .scanner-corners > span::before { bottom: 14px; left: 14px; border-right: none; border-top: none; }
+  .scanner-corners > span::after  { bottom: 14px; right: 14px; border-left: none; border-top: none; }
+
+  .scan-hint {
+    text-align: center; font-family: 'Cinzel', serif;
+    font-size: 10px; letter-spacing: .25em;
+    color: var(--muted); margin-top: 10px;
+  }
+
+  .read-result {
+    text-align: center; padding: 20px 18px;
+    background: linear-gradient(180deg, rgba(61,38,21,.8), rgba(26,13,5,.9));
+    border-radius: 16px; border: 1px solid var(--gold);
+    margin-bottom: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+  }
+  .read-result.invalid { border-color: rgba(201,69,69,.6); }
+  .read-result .status {
+    font-family: 'Cinzel', serif; font-weight: 700;
+    letter-spacing: .35em; font-size: 10px;
+    color: var(--good); margin-bottom: 10px;
+  }
+  .read-result.invalid .status { color: var(--bad); }
+  .read-result .big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 84px; line-height: 1;
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .read-result.invalid .big {
+    background: none; -webkit-text-fill-color: var(--bad); font-size: 28px;
+  }
+  .read-result .minlbl {
+    font-family: 'Cinzel', serif;
+    letter-spacing: .35em; font-size: 12px;
+    color: var(--cream); margin-bottom: 4px;
+  }
+  .read-result .sub {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; color: var(--cream);
+    margin: 10px 0 6px; font-size: 14px;
+  }
+  .read-result .meta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; color: var(--muted); margin: 3px 0;
+  }
+  .read-result .meta strong { color: var(--cream); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<svg class="palm left" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="palmGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a2410"/>
+      <stop offset="100%" stop-color="#1a0d05"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#palmGrad)" d="M95 360 Q92 240 88 180 Q86 140 90 110 L97 110 Q101 140 99 180 Q96 240 105 360 Z"/>
+  <g fill="#2a1a0c" opacity=".95">
+    <path d="M90 110 Q40 90 0 100 Q30 80 90 95 Z"/>
+    <path d="M90 105 Q50 70 5 60 Q40 65 92 95 Z"/>
+    <path d="M92 100 Q120 70 180 65 Q140 80 95 100 Z"/>
+    <path d="M93 95 Q130 50 195 40 Q150 70 97 100 Z"/>
+    <path d="M91 108 Q60 130 10 145 Q50 120 92 105 Z"/>
+    <path d="M93 108 Q140 130 195 130 Q150 115 95 105 Z"/>
+    <path d="M92 95 Q88 60 80 20 Q95 50 95 95 Z"/>
+    <path d="M93 95 Q100 60 115 25 Q105 60 96 95 Z"/>
+  </g>
+</svg>
+<svg class="palm right" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
+  <path fill="url(#palmGrad)" d="M95 360 Q92 240 88 180 Q86 140 90 110 L97 110 Q101 140 99 180 Q96 240 105 360 Z"/>
+  <g fill="#2a1a0c" opacity=".95">
+    <path d="M90 110 Q40 90 0 100 Q30 80 90 95 Z"/>
+    <path d="M90 105 Q50 70 5 60 Q40 65 92 95 Z"/>
+    <path d="M92 100 Q120 70 180 65 Q140 80 95 100 Z"/>
+    <path d="M93 95 Q130 50 195 40 Q150 70 97 100 Z"/>
+    <path d="M91 108 Q60 130 10 145 Q50 120 92 105 Z"/>
+    <path d="M93 108 Q140 130 195 130 Q150 115 95 105 Z"/>
+    <path d="M92 95 Q88 60 80 20 Q95 50 95 95 Z"/>
+    <path d="M93 95 Q100 60 115 25 Q105 60 96 95 Z"/>
+  </g>
+</svg>
+
+<div class="sparkles" id="sparkles"></div>
+
+<div class="app">
+  <header class="brand">
+    <svg class="crown" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <defs>
+        <linearGradient id="crownGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f8e3b3"/>
+          <stop offset="50%" stop-color="#f0c068"/>
+          <stop offset="100%" stop-color="#8a5a1f"/>
+        </linearGradient>
+      </defs>
+      <path d="M8 22 L18 38 L24 18 L32 36 L40 18 L46 38 L56 22 L52 48 L12 48 Z"
+            fill="url(#crownGrad)" stroke="#8a5a1f" stroke-width="1.2" stroke-linejoin="round"/>
+      <circle cx="8" cy="20" r="3" fill="#f0c068" stroke="#8a5a1f"/>
+      <circle cx="56" cy="20" r="3" fill="#f0c068" stroke="#8a5a1f"/>
+      <circle cx="32" cy="14" r="3" fill="#f0c068" stroke="#8a5a1f"/>
+      <rect x="12" y="50" width="40" height="4" fill="#c79136" stroke="#8a5a1f"/>
+    </svg>
+    <p class="brand-title">REI DOS CHAVEIROS</p>
+  </header>
+
+  <!-- ====== HOME ====== -->
+  <section id="home" class="screen active">
+    <button class="home-btn" onclick="show('gerar')">
+      <div class="home-btn-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="8" width="18" height="13" rx="2"/>
+          <path d="M8 8V5a4 4 0 0 1 8 0v3"/>
+          <path d="M12 12v4"/><path d="M10 14h4"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="home-btn-title">GERAR CORTESIA</h2>
+        <p class="home-btn-sub">Para a funcionária da loja</p>
+      </div>
+    </button>
+
+    <button class="home-btn" onclick="show('ler')">
+      <div class="home-btn-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+          <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+          <rect x="7" y="7" width="10" height="10" rx="1"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="home-btn-title">LER QR CODE</h2>
+        <p class="home-btn-sub">Para a poltrona de massagem</p>
+      </div>
+    </button>
+
+    <div class="rules">
+      <p class="rules-title">REGRAS DA CORTESIA</p>
+      <div class="rule-row"><span class="val">Compra ≥ R$ 100</span><span class="min">5 MIN</span></div>
+      <div class="rule-row"><span class="val">Compra ≥ R$ 200</span><span class="min">10 MIN</span></div>
+      <div class="rule-row"><span class="val" style="font-size:12px; color:var(--muted);">Validade do QR</span><span class="min" style="font-size:13px;">24 H</span></div>
+    </div>
+  </section>
+
+  <!-- ====== GERAR ====== -->
+  <section id="gerar" class="screen">
+    <button class="back" onclick="show('home')">← VOLTAR</button>
+
+    <div id="gerar-form">
+      <div class="field">
+        <label class="field-label" for="valor">Valor da compra</label>
+        <div class="input-money">
+          <span class="symbol">R$</span>
+          <input id="valor" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+        </div>
+        <div id="gerar-erro"></div>
+      </div>
+      <button class="btn" onclick="gerarQR()">Gerar QR Code</button>
+    </div>
+
+    <div id="gerar-resultado" style="display:none;">
+      <article class="cortesia-card">
+        <div class="headline">
+          <span class="line-1">VOCÊ GANHOU</span>
+          <span class="line-2">UMA MASSAGEM</span>
+          <span class="gratis">Grátis</span>
+        </div>
+
+        <div class="foto-wrap">
+          <img src="cadeira.png" class="foto-cadeira" alt="Cadeira de massagem"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="foto-fallback" style="display:none;">SALVE<br>cadeira.png<br>NA PASTA</div>
+          <span class="min-overlay"><span id="g-min">5</span> MIN</span>
+        </div>
+
+        <div class="qr-frame">
+          <div id="qrcode"></div>
+        </div>
+
+        <div class="meta-row">
+          <div class="meta-item">
+            <div class="k">Compra</div>
+            <div class="v" id="g-valor">R$ 100,00</div>
+          </div>
+          <div class="meta-item">
+            <div class="k">Válido até</div>
+            <div class="v" id="g-validade">—</div>
+          </div>
+        </div>
+
+        <div class="footer-brand"><span class="name">REI DOS CHAVEIROS</span></div>
+      </article>
+
+      <button class="btn outline" onclick="novaCortesia()">Nova Cortesia</button>
+      <button class="btn ghost" onclick="show('home')">Voltar ao início</button>
+    </div>
+  </section>
+
+  <!-- ====== LER ====== -->
+  <section id="ler" class="screen">
+    <button class="back" onclick="parar('home')">← VOLTAR</button>
+
+    <div id="ler-scanner">
+      <div class="scanner-frame">
+        <div id="reader"></div>
+        <div class="scanner-corners"><span></span></div>
+      </div>
+      <p class="scan-hint">APONTE A CÂMERA PARA O QR CODE</p>
+    </div>
+
+    <div id="ler-resultado" style="display:none;">
+      <div id="resultado-card" class="read-result">
+        <div class="status"></div>
+        <div class="big"></div>
+        <div class="minlbl"></div>
+        <div class="sub"></div>
+        <div class="meta"></div>
+        <div class="meta"></div>
+      </div>
+      <button class="btn outline" onclick="lerOutra()">Ler Outra</button>
+      <button class="btn ghost" onclick="parar('home')">Voltar ao início</button>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
+<script>
+  (function makeSparkles() {
+    const c = document.getElementById('sparkles');
+    for (let i = 0; i < 18; i++) {
+      const s = document.createElement('div');
+      s.className = 'spark';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.animationDelay = (-Math.random() * 8) + 's, ' + (-Math.random() * 2.4) + 's';
+      s.style.animationDuration = (6 + Math.random() * 6) + 's, ' + (1.8 + Math.random() * 1.6) + 's';
+      const size = 2 + Math.random() * 3;
+      s.style.width = s.style.height = size + 'px';
+      c.appendChild(s);
+    }
+  })();
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === 'ler') iniciarScanner();
+    if (id === 'gerar') resetGerarForm();
+  }
+
+  function parseValor(str) {
+    if (!str) return NaN;
+    str = String(str).trim().replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
+    return parseFloat(str);
+  }
+  function formatBRL(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+  function formatData(ts) {
+    const d = new Date(ts);
+    const pad = n => String(n).padStart(2, '0');
+    return `${pad(d.getDate())}/${pad(d.getMonth()+1)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function minutosPara(valor) {
+    if (valor >= 200) return 10;
+    if (valor >= 100) return 5;
+    return 0;
+  }
+  function idCurto() { return Math.random().toString(36).slice(2, 8); }
+
+  const valorInput = document.getElementById('valor');
+  valorInput.addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g, '');
+    if (!v) { e.target.value = ''; return; }
+    v = (parseInt(v, 10) / 100).toFixed(2).replace('.', ',');
+    v = v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    e.target.value = v;
+  });
+
+  function resetGerarForm() {
+    document.getElementById('gerar-form').style.display = '';
+    document.getElementById('gerar-resultado').style.display = 'none';
+    document.getElementById('gerar-erro').innerHTML = '';
+    valorInput.value = '';
+    setTimeout(() => valorInput.focus(), 200);
+  }
+  function novaCortesia() { resetGerarForm(); }
+
+  function gerarQR() {
+    const erro = document.getElementById('gerar-erro');
+    erro.innerHTML = '';
+    const valor = parseValor(valorInput.value);
+    if (!valor || isNaN(valor) || valor <= 0) {
+      erro.innerHTML = '<div class="error">Digite um valor válido.</div>';
+      return;
+    }
+    if (valor < 100) {
+      erro.innerHTML = `<div class="error">Valor mínimo R$ 100,00 — faltam ${formatBRL(100 - valor)}.</div>`;
+      return;
+    }
+    const minutos = minutosPara(valor);
+    const ts = Date.now();
+    const id = idCurto();
+    const base = window.location.origin + window.location.pathname;
+    const payload = `${base}?v=${valor.toFixed(2)}&m=${minutos}&t=${ts}&id=${id}`;
+
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), {
+      text: payload, width: 180, height: 180,
+      correctLevel: QRCode.CorrectLevel.M,
+      colorDark: '#1a0d05', colorLight: '#f5e6c8'
+    });
+    document.getElementById('g-min').textContent = minutos;
+    document.getElementById('g-valor').textContent = formatBRL(valor);
+    document.getElementById('g-validade').textContent = formatData(ts + 24*3600*1000);
+
+    document.getElementById('gerar-form').style.display = 'none';
+    document.getElementById('gerar-resultado').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  let scanner = null;
+  function iniciarScanner() {
+    document.getElementById('ler-scanner').style.display = '';
+    document.getElementById('ler-resultado').style.display = 'none';
+    if (scanner) return;
+    scanner = new Html5Qrcode("reader");
+    scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 240, height: 240 } },
+      onLeitura, () => {}
+    ).catch(err => {
+      document.getElementById('reader').innerHTML =
+        `<div style="color:#f5e6c8;padding:30px;text-align:center;font-family:'DM Sans',sans-serif;">
+          Não consegui abrir a câmera.<br><small style="opacity:.6">${err}</small>
+         </div>`;
+    });
+  }
+  function parar(destino) {
+    if (scanner) {
+      scanner.stop().then(() => { scanner.clear(); scanner = null; show(destino); })
+        .catch(() => { scanner = null; show(destino); });
+    } else { show(destino); }
+  }
+  function lerOutra() {
+    document.getElementById('ler-resultado').style.display = 'none';
+    document.getElementById('ler-scanner').style.display = '';
+    if (!scanner) iniciarScanner();
+    else if (scanner.resume) scanner.resume();
+  }
+  function onLeitura(texto) {
+    if (scanner) { try { scanner.pause(true); } catch(e) {} }
+    mostrarResultado(texto);
+  }
+  function parsePayload(texto) {
+    try {
+      let url;
+      try { url = new URL(texto); }
+      catch { url = new URL(texto, window.location.origin); }
+      const v = parseFloat(url.searchParams.get('v'));
+      const m = parseInt(url.searchParams.get('m'), 10);
+      const t = parseInt(url.searchParams.get('t'), 10);
+      const id = url.searchParams.get('id') || '';
+      if (isNaN(v) || isNaN(m) || isNaN(t)) return null;
+      return { v, m, t, id };
+    } catch { return null; }
+  }
+  function mostrarResultado(texto) {
+    const card = document.getElementById('resultado-card');
+    card.classList.remove('invalid');
+    const $status = card.querySelector('.status');
+    const $big = card.querySelector('.big');
+    const $minlbl = card.querySelector('.minlbl');
+    const $sub = card.querySelector('.sub');
+    const $metas = card.querySelectorAll('.meta');
+
+    const data = parsePayload(texto);
+    if (!data) {
+      card.classList.add('invalid');
+      $status.textContent = '⛔ QR INVÁLIDO';
+      $big.textContent = 'Não reconhecido';
+      $minlbl.textContent = '';
+      $sub.textContent = 'Este QR não é uma cortesia válida.';
+      $metas[0].innerHTML = ''; $metas[1].innerHTML = '';
+    } else {
+      const validade = data.t + 24*3600*1000;
+      const expirado = Date.now() > validade;
+      if (expirado) {
+        card.classList.add('invalid');
+        $status.textContent = '⛔ EXPIRADA';
+        $big.textContent = `${data.m} min`;
+        $minlbl.textContent = '';
+        $sub.textContent = 'Esta cortesia passou de 24 horas.';
+        $metas[0].innerHTML = `Compra: <strong>${formatBRL(data.v)}</strong>`;
+        $metas[1].innerHTML = `Expirou em <strong>${formatData(validade)}</strong>`;
+      } else {
+        $status.textContent = '✅ CORTESIA VÁLIDA';
+        $big.textContent = `${data.m}`;
+        $minlbl.textContent = `MINUTOS DE MASSAGEM`;
+        $sub.textContent = '"Aproveite o seu momento."';
+        $metas[0].innerHTML = `Compra: <strong>${formatBRL(data.v)}</strong>`;
+        $metas[1].innerHTML = `Válido até <strong>${formatData(validade)}</strong>`;
+      }
+    }
+
+    document.getElementById('ler-scanner').style.display = 'none';
+    document.getElementById('ler-resultado').style.display = '';
+  }
+
+  (function checarURL() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('v') && params.has('m') && params.has('t')) {
+      show('ler');
+      setTimeout(() => {
+        if (scanner) { try { scanner.stop().then(()=>{ scanner=null; }); } catch(e){} }
+        mostrarResultado(window.location.href);
+      }, 200);
+    }
+  })();
+</script>
+</body>
+</html>
