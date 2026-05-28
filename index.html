@@ -656,6 +656,134 @@
     font-size: 10px; letter-spacing: .3em;
     margin-bottom: 4px;
   }
+
+  /* ====== Textarea / Anotações ====== */
+  .field-textarea {
+    width: 100%;
+    background: rgba(0,0,0,.4);
+    border: 1px solid rgba(199,145,54,.3);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    outline: none;
+    resize: vertical;
+    min-height: 60px;
+    transition: border-color .2s;
+  }
+  .field-textarea:focus { border-color: var(--gold-bright); }
+  .field-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(0,0,0,.4);
+    border: 1px solid rgba(199,145,54,.4);
+    border-radius: 10px;
+    color: var(--cream);
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field-input:focus { border-color: var(--gold-bright); }
+  .notas-wrap {
+    margin: 14px 0 6px;
+  }
+  .notas-wrap label {
+    font-family: 'Cinzel', serif;
+    letter-spacing: .3em;
+    font-size: 10px;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .notas-saved {
+    font-size: 11px;
+    color: var(--good);
+    margin-top: 4px;
+    text-align: center;
+  }
+
+  /* ====== Histórico ====== */
+  .historico {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(199,145,54,.2);
+  }
+  .historico h3 {
+    font-family: 'Cinzel', serif;
+    letter-spacing: .3em;
+    font-size: 10px;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    text-align: center;
+  }
+  .historico-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .historico-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 4px;
+    border-bottom: 1px dashed rgba(199,145,54,.15);
+    font-size: 12px;
+  }
+  .historico-item:last-child { border-bottom: none; }
+  .historico-item .ev {
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .historico-item .ev.premio {
+    color: var(--gold-bright);
+    font-weight: 700;
+  }
+  .historico-item .when {
+    color: var(--muted);
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .historico-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 10px 0;
+    font-style: italic;
+    list-style: none;
+  }
+
+  /* ====== Notas no card de leitura ====== */
+  .card-notas {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(240,192,104,.1);
+    border-left: 3px solid var(--gold-bright);
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--cream);
+    font-style: italic;
+    line-height: 1.4;
+    text-align: left;
+  }
+  .card-notas .lbl {
+    font-family: 'Cinzel', serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: .35em;
+    color: var(--gold-bright);
+    display: block;
+    margin-bottom: 4px;
+  }
 </style>
 </head>
 <body>
@@ -834,9 +962,10 @@
         <div class="sub"></div>
         <div class="meta"></div>
         <div class="meta"></div>
+        <div class="card-notas" style="display:none;"></div>
       </div>
       <button id="btn-resgatar" class="btn" onclick="confirmarResgate()" style="display:none;">✓ Resgatar Cortesia</button>
-      <button id="btn-carimbar" class="btn" onclick="carimbarCartao()" style="display:none;">+ 1 Selo</button>
+      <button id="btn-carimbar" class="btn" onclick="carimbarCartao()" style="display:none;">+ 1 SELO (sessão paga)</button>
       <button id="btn-resgatar-premio" class="btn" onclick="resgatarPremio()" style="display:none;">🎁 Resgatar Prêmio (15 min)</button>
       <button class="btn outline" onclick="lerOutra()">Ler Outra</button>
       <button class="btn ghost" onclick="parar('home')">Voltar ao início</button>
@@ -955,15 +1084,24 @@
       <div id="cartoes-list" class="cartoes-list"></div>
     </div>
 
-    <!-- Form de novo cartão -->
+    <!-- Form de novo cartão / editar -->
     <div id="fid-novo" style="display:none;">
       <div class="field">
-        <label class="field-label" for="card-nome">Nome do cliente</label>
-        <input type="text" id="card-nome" placeholder="Maria"
-               style="width:100%; padding:14px 16px; background:rgba(0,0,0,.4); border:1px solid rgba(199,145,54,.4); border-radius:10px; color:var(--cream); font-family:'Playfair Display',serif; font-size:18px; outline:none;">
-        <div id="card-erro"></div>
+        <label class="field-label" for="card-nome">Nome do cliente *</label>
+        <input type="text" id="card-nome" class="field-input" placeholder="Maria">
       </div>
-      <button class="btn" onclick="criarCartao()">Criar Cartão</button>
+      <div class="field">
+        <label class="field-label" for="card-tel">Telefone *</label>
+        <input type="tel" id="card-tel" class="field-input" placeholder="(27) 99999-9999"
+               inputmode="numeric" autocomplete="off">
+      </div>
+      <div class="field">
+        <label class="field-label" for="card-notas">Anotações (opcional)</label>
+        <textarea id="card-notas" class="field-textarea"
+                  placeholder="Ex: prefere intensidade média"></textarea>
+      </div>
+      <div id="card-erro"></div>
+      <button id="btn-criar-cartao" class="btn" onclick="criarCartao()">Criar Cartão</button>
       <button class="btn ghost" onclick="voltarFidelidade()">Cancelar</button>
     </div>
 
@@ -973,6 +1111,7 @@
         <div class="headline">
           <span class="line-1">CARTÃO FIDELIDADE</span>
           <span class="line-2" id="fid-nome" style="font-size:32px; margin-top:6px;">—</span>
+          <span id="fid-tel-display" style="display:block; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:13px; letter-spacing:.05em; margin-top:4px; font-style:normal;"></span>
         </div>
 
         <div class="seal-bar" id="fid-seals"></div>
@@ -985,8 +1124,23 @@
           Cliente fotografa esse QR e mostra<br>a cada massagem pra ganhar 1 selo.
         </p>
 
+        <div class="notas-wrap">
+          <label>Anotações</label>
+          <textarea id="fid-notas-input" class="field-textarea"
+                    placeholder="Preferências, observações…"
+                    onblur="salvarNotas()"></textarea>
+          <div id="fid-notas-saved" class="notas-saved" style="visibility:hidden;">✓ Salvo</div>
+        </div>
+
+        <div class="historico">
+          <h3>HISTÓRICO</h3>
+          <ul id="fid-historico-list" class="historico-list"></ul>
+          <p id="fid-stats" style="text-align:center; color:var(--muted); font-size:11px; margin: 10px 0 0;"></p>
+        </div>
+
         <div class="footer-brand"><span class="name">REI DOS CHAVEIROS</span></div>
       </article>
+      <button class="btn" onclick="editarCartaoAtual()">Editar Cartão</button>
       <button class="btn outline" onclick="voltarFidelidade()">Voltar à lista</button>
       <button class="btn ghost" onclick="excluirCartaoAtual()" style="color:var(--bad);">Excluir cartão</button>
     </div>
@@ -1163,6 +1317,20 @@
 
   let cartaoAtualId = null;
   let cartaoLidoAtual = null;
+  let editandoCartaoId = null;
+
+  // Máscara de telefone brasileiro
+  function maskPhone(s) {
+    const d = String(s).replace(/\D/g, '').slice(0, 11);
+    if (d.length === 0) return '';
+    if (d.length <= 2) return `(${d}`;
+    if (d.length <= 6) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+    if (d.length <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+    return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+  }
+  document.getElementById('card-tel').addEventListener('input', e => {
+    e.target.value = maskPhone(e.target.value);
+  });
 
   function showFidelidade() {
     document.getElementById('fid-menu').style.display = '';
@@ -1191,47 +1359,109 @@
       const card = c[id];
       const premio = card.selos >= SELOS_OBJETIVO;
       const faltam = SELOS_OBJETIVO - card.selos;
-      const sub = premio
+      const status = premio
         ? '🎁 PRÊMIO LIBERADO'
         : `Faltam ${faltam} selo${faltam === 1 ? '' : 's'}`;
+      const tel = card.telefone ? escapeHTML(card.telefone) + ' · ' : '';
       return `
         <div class="cartao-item ${premio ? 'premio' : ''}" onclick="abrirCartao('${id}')">
           <div class="seal-count">${card.selos}/${SELOS_OBJETIVO}</div>
           <div class="cartao-info">
             <div class="cartao-nome">${escapeHTML(card.nome)}</div>
-            <div class="cartao-meta">${sub}</div>
+            <div class="cartao-meta">${tel}${status}</div>
           </div>
         </div>
       `;
     }).join('');
   }
   function abrirNovoCartao() {
+    editandoCartaoId = null;
     document.getElementById('fid-menu').style.display = 'none';
+    document.getElementById('fid-cartao').style.display = 'none';
     document.getElementById('fid-novo').style.display = '';
     document.getElementById('card-nome').value = '';
+    document.getElementById('card-tel').value = '';
+    document.getElementById('card-notas').value = '';
     document.getElementById('card-erro').innerHTML = '';
+    document.getElementById('btn-criar-cartao').textContent = 'Criar Cartão';
+    setTimeout(() => document.getElementById('card-nome').focus(), 100);
+  }
+  function editarCartaoAtual() {
+    if (!cartaoAtualId) return;
+    const c = getCartao(cartaoAtualId);
+    if (!c) return;
+    editandoCartaoId = cartaoAtualId;
+    document.getElementById('fid-menu').style.display = 'none';
+    document.getElementById('fid-cartao').style.display = 'none';
+    document.getElementById('fid-novo').style.display = '';
+    document.getElementById('card-nome').value = c.nome || '';
+    document.getElementById('card-tel').value = c.telefone || '';
+    document.getElementById('card-notas').value = c.notas || '';
+    document.getElementById('card-erro').innerHTML = '';
+    document.getElementById('btn-criar-cartao').textContent = 'Salvar Alterações';
     setTimeout(() => document.getElementById('card-nome').focus(), 100);
   }
   function criarCartao() {
     const nome = document.getElementById('card-nome').value.trim();
+    const telefone = document.getElementById('card-tel').value.trim();
+    const notas = document.getElementById('card-notas').value.trim();
     const erro = document.getElementById('card-erro');
+    erro.innerHTML = '';
     if (!nome) {
       erro.innerHTML = '<div class="error">Digite o nome do cliente.</div>';
       return;
     }
-    const id = idCurto();
-    const cartao = { id, nome, selos: 0, criadoEm: Date.now(), premiosResgatados: 0 };
-    salvarCartao(cartao);
-    abrirCartao(id);
+    if (!telefone || telefone.replace(/\D/g,'').length < 10) {
+      erro.innerHTML = '<div class="error">Digite um telefone válido (DDD + número).</div>';
+      return;
+    }
+    if (editandoCartaoId) {
+      const c = getCartao(editandoCartaoId);
+      if (c) {
+        c.nome = nome; c.telefone = telefone; c.notas = notas;
+        salvarCartao(c);
+      }
+      const idToOpen = editandoCartaoId;
+      editandoCartaoId = null;
+      abrirCartao(idToOpen);
+    } else {
+      const id = idCurto();
+      const cartao = {
+        id, nome, telefone, notas,
+        selos: 0, criadoEm: Date.now(),
+        premiosResgatados: 0,
+        historico: []
+      };
+      salvarCartao(cartao);
+      abrirCartao(id);
+    }
+  }
+  function salvarNotas() {
+    if (!cartaoAtualId) return;
+    const c = getCartao(cartaoAtualId);
+    if (!c) return;
+    const novo = document.getElementById('fid-notas-input').value.trim();
+    if (novo === (c.notas || '')) return; // nada a salvar
+    c.notas = novo;
+    salvarCartao(c);
+    const flag = document.getElementById('fid-notas-saved');
+    flag.style.visibility = 'visible';
+    setTimeout(() => { flag.style.visibility = 'hidden'; }, 1500);
   }
   function abrirCartao(id) {
     const card = getCartao(id);
     if (!card) { voltarFidelidade(); return; }
+    // Backfill campos novos
+    card.telefone = card.telefone || '';
+    card.notas = card.notas || '';
+    card.historico = card.historico || [];
     cartaoAtualId = id;
+
     document.getElementById('fid-menu').style.display = 'none';
     document.getElementById('fid-novo').style.display = 'none';
     document.getElementById('fid-cartao').style.display = '';
     document.getElementById('fid-nome').textContent = card.nome;
+    document.getElementById('fid-tel-display').textContent = card.telefone || '—';
 
     // Renderiza selos
     const seals = document.getElementById('fid-seals');
@@ -1252,6 +1482,31 @@
       correctLevel: QRCode.CorrectLevel.M,
       colorDark: '#1a0d05', colorLight: '#f5e6c8'
     });
+
+    // Notas
+    document.getElementById('fid-notas-input').value = card.notas;
+    document.getElementById('fid-notas-saved').style.visibility = 'hidden';
+
+    // Histórico
+    const list = document.getElementById('fid-historico-list');
+    const hist = [...card.historico].reverse().slice(0, 15);
+    if (hist.length === 0) {
+      list.innerHTML = '<li class="historico-empty">Sem registros ainda.</li>';
+    } else {
+      list.innerHTML = hist.map(ev => `
+        <li class="historico-item">
+          <span class="ev ${ev.type === 'premio' ? 'premio' : ''}">
+            ${ev.type === 'premio' ? '🎁 Prêmio resgatado' : '+ 1 selo (sessão paga)'}
+          </span>
+          <span class="when">${formatData(ev.at)}</span>
+        </li>
+      `).join('');
+    }
+    const pr = card.premiosResgatados || 0;
+    const totSelos = card.historico.filter(e => e.type === 'selo').length;
+    document.getElementById('fid-stats').innerHTML =
+      `<strong style="color:var(--cream)">${totSelos}</strong> sess${totSelos === 1 ? 'ão' : 'ões'} paga${totSelos === 1 ? '' : 's'} no total · ` +
+      `<strong style="color:var(--gold-bright)">${pr}</strong> prêmio${pr === 1 ? '' : 's'} resgatado${pr === 1 ? '' : 's'}`;
   }
   function excluirCartaoAtual() {
     if (!cartaoAtualId) return;
@@ -1268,6 +1523,8 @@
     if (!c) return;
     c.selos = Math.min((c.selos || 0) + 1, SELOS_OBJETIVO);
     c.ultimoSelo = Date.now();
+    c.historico = c.historico || [];
+    c.historico.push({ type: 'selo', at: Date.now() });
     salvarCartao(c);
     cartaoLidoAtual = c;
 
@@ -1296,6 +1553,8 @@
     c.selos = 0;
     c.premiosResgatados = (c.premiosResgatados || 0) + 1;
     c.ultimoPremio = Date.now();
+    c.historico = c.historico || [];
+    c.historico.push({ type: 'premio', at: Date.now() });
     salvarCartao(c);
     cartaoLidoAtual = c;
 
@@ -1472,11 +1731,14 @@
     const $btnResg = document.getElementById('btn-resgatar');
     const $btnCarimbar = document.getElementById('btn-carimbar');
     const $btnPremio = document.getElementById('btn-resgatar-premio');
+    const $notas = card.querySelector('.card-notas');
     $btnResg.style.display = 'none';
     $btnResg.disabled = false;
     $btnResg.textContent = '✓ Resgatar Cortesia';
     $btnCarimbar.style.display = 'none';
     $btnPremio.style.display = 'none';
+    $notas.style.display = 'none';
+    $notas.innerHTML = '';
     cortesiaAtual = null;
     cartaoLidoAtual = null;
 
@@ -1501,14 +1763,19 @@
       } else {
         cartaoLidoAtual = cartao;
         const completo = cartao.selos >= SELOS_OBJETIVO;
+        const telHtml = cartao.telefone
+          ? `<strong>${escapeHTML(cartao.telefone)}</strong>`
+          : `Cartão de <strong>${escapeHTML(cartao.nome)}</strong>`;
         if (completo) {
           $status.textContent = '🎁 PRÊMIO LIBERADO';
           $big.textContent = cartao.nome;
           $minlbl.textContent = `${cartao.selos}/${SELOS_OBJETIVO} SELOS — ${PREMIO_MIN} MIN`;
           $sub.textContent = `Massagem de ${PREMIO_MIN} minutos liberada!`;
-          $metas[0].innerHTML = `Cartão de <strong>${escapeHTML(cartao.nome)}</strong>`;
+          $metas[0].innerHTML = telHtml;
           const pr = cartao.premiosResgatados || 0;
-          $metas[1].innerHTML = pr > 0 ? `${pr} prêmio${pr === 1 ? '' : 's'} já resgatado${pr === 1 ? '' : 's'}` : '';
+          $metas[1].innerHTML = pr > 0
+            ? `${pr} prêmio${pr === 1 ? '' : 's'} já resgatado${pr === 1 ? '' : 's'}`
+            : '';
           $btnPremio.style.display = '';
         } else {
           $status.textContent = '⭐ CARTÃO FIDELIDADE';
@@ -1516,11 +1783,16 @@
           $minlbl.textContent = `${cartao.selos}/${SELOS_OBJETIVO} SELOS`;
           const faltam = SELOS_OBJETIVO - cartao.selos;
           $sub.textContent = `Faltam ${faltam} selo${faltam === 1 ? '' : 's'} pra ganhar massagem.`;
-          $metas[0].innerHTML = `Cartão de <strong>${escapeHTML(cartao.nome)}</strong>`;
+          $metas[0].innerHTML = telHtml;
           $metas[1].innerHTML = cartao.ultimoSelo
             ? `Último selo: <strong>${formatData(cartao.ultimoSelo)}</strong>`
             : '';
           $btnCarimbar.style.display = '';
+        }
+        // Anotações visíveis se houver
+        if (cartao.notas) {
+          $notas.style.display = '';
+          $notas.innerHTML = `<span class="lbl">ANOTAÇÕES</span>${escapeHTML(cartao.notas)}`;
         }
       }
     } else {
