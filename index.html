@@ -432,6 +432,13 @@
   .read-result.invalid .big {
     background: none; -webkit-text-fill-color: var(--bad); font-size: 28px;
   }
+  .read-result.redeemed { border-color: rgba(240,160,80,.55); }
+  .read-result.redeemed .status { color: #f0a050; }
+  .read-result.redeemed .big {
+    background: linear-gradient(180deg, #d49860, #785030);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   .read-result .minlbl {
     font-family: 'Cinzel', serif;
     letter-spacing: .35em; font-size: 12px;
@@ -624,6 +631,7 @@
         <div class="meta"></div>
         <div class="meta"></div>
       </div>
+      <button id="btn-resgatar" class="btn" onclick="confirmarResgate()" style="display:none;">✓ Resgatar Cortesia</button>
       <button class="btn outline" onclick="lerOutra()">Ler Outra</button>
       <button class="btn ghost" onclick="parar('home')">Voltar ao início</button>
     </div>
@@ -631,7 +639,26 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
+<script>
+  // Carrega html5-qrcode com fallback entre CDNs (se um cair, tenta o próximo)
+  const qrLibReady = new Promise((resolve, reject) => {
+    const sources = [
+      'https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/html5-qrcode.min.js',
+      'https://unpkg.com/html5-qrcode@2.3.10/html5-qrcode.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js'
+    ];
+    let i = 0;
+    const tryNext = () => {
+      if (i >= sources.length) { reject(new Error('Nenhum CDN respondeu')); return; }
+      const s = document.createElement('script');
+      s.src = sources[i++];
+      s.onload = () => (typeof Html5Qrcode !== 'undefined') ? resolve() : tryNext();
+      s.onerror = tryNext;
+      document.head.appendChild(s);
+    };
+    tryNext();
+  });
+</script>
 <script>
   (function makeSparkles() {
     const c = document.getElementById('sparkles');
@@ -671,6 +698,26 @@
     return 0;
   }
   function idCurto() { return Math.random().toString(36).slice(2, 8); }
+
+  // ====== Resgates (localStorage) ======
+  const REDEEMED_KEY = 'cortesias_resgatadas';
+  function getResgates() {
+    try { return JSON.parse(localStorage.getItem(REDEEMED_KEY)) || {}; }
+    catch { return {}; }
+  }
+  function salvarResgates(map) {
+    // Limpa entradas com mais de 7 dias pra não inchar o storage
+    const cutoff = Date.now() - 7*24*3600*1000;
+    for (const k in map) { if (map[k].at < cutoff) delete map[k]; }
+    localStorage.setItem(REDEEMED_KEY, JSON.stringify(map));
+  }
+  function buscarResgate(id) { return getResgates()[id]; }
+  function marcarResgate(id, data) {
+    const r = getResgates();
+    r[id] = { at: Date.now(), m: data.m, v: data.v };
+    salvarResgates(r);
+  }
+  let cortesiaAtual = null;
 
   const valorInput = document.getElementById('valor');
   valorInput.addEventListener('input', e => {
@@ -737,16 +784,18 @@
     btn.style.display = 'none';
     diag.innerHTML = 'Abrindo câmera…';
 
-    if (typeof Html5Qrcode === 'undefined') {
-      diag.innerHTML = '<span class="err">A biblioteca de leitura QR não carregou. Verifique sua internet e atualize (F5).</span>';
-      btn.style.display = '';
-      return;
-    }
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       diag.innerHTML = '<span class="err">Este navegador não suporta câmera. Tente abrir no Chrome.</span>';
       btn.style.display = '';
       return;
     }
+    diag.innerHTML = 'Carregando leitor…';
+    try { await qrLibReady; } catch {
+      diag.innerHTML = '<span class="err">A biblioteca de leitura QR não carregou (sem internet?). Verifique a conexão e atualize.</span>';
+      btn.style.display = '';
+      return;
+    }
+    diag.innerHTML = 'Abrindo câmera…';
 
     // Limpa scanner anterior caso ainda esteja ativo
     if (scanner) {
@@ -816,12 +865,17 @@
   }
   function mostrarResultado(texto) {
     const card = document.getElementById('resultado-card');
-    card.classList.remove('invalid');
+    card.classList.remove('invalid', 'redeemed');
     const $status = card.querySelector('.status');
     const $big = card.querySelector('.big');
     const $minlbl = card.querySelector('.minlbl');
     const $sub = card.querySelector('.sub');
     const $metas = card.querySelectorAll('.meta');
+    const $btnResg = document.getElementById('btn-resgatar');
+    $btnResg.style.display = 'none';
+    $btnResg.disabled = false;
+    $btnResg.textContent = '✓ Resgatar Cortesia';
+    cortesiaAtual = null;
 
     const data = parsePayload(texto);
     if (!data) {
@@ -834,6 +888,8 @@
     } else {
       const validade = data.t + 24*3600*1000;
       const expirado = Date.now() > validade;
+      const resg = buscarResgate(data.id);
+
       if (expirado) {
         card.classList.add('invalid');
         $status.textContent = '⛔ EXPIRADA';
@@ -842,6 +898,14 @@
         $sub.textContent = 'Esta cortesia passou de 24 horas.';
         $metas[0].innerHTML = `Compra: <strong>${formatBRL(data.v)}</strong>`;
         $metas[1].innerHTML = `Expirou em <strong>${formatData(validade)}</strong>`;
+      } else if (resg) {
+        card.classList.add('redeemed');
+        $status.textContent = '⚠ JÁ RESGATADA';
+        $big.textContent = `${data.m}`;
+        $minlbl.textContent = `MIN — JÁ UTILIZADA`;
+        $sub.textContent = `Cortesia já foi usada.`;
+        $metas[0].innerHTML = `Compra: <strong>${formatBRL(data.v)}</strong>`;
+        $metas[1].innerHTML = `Resgatada em <strong>${formatData(resg.at)}</strong>`;
       } else {
         $status.textContent = '✅ CORTESIA VÁLIDA';
         $big.textContent = `${data.m}`;
@@ -849,11 +913,31 @@
         $sub.textContent = '"Aproveite o seu momento."';
         $metas[0].innerHTML = `Compra: <strong>${formatBRL(data.v)}</strong>`;
         $metas[1].innerHTML = `Válido até <strong>${formatData(validade)}</strong>`;
+        cortesiaAtual = data;
+        $btnResg.style.display = '';
       }
     }
 
     document.getElementById('ler-scanner').style.display = 'none';
     document.getElementById('ler-resultado').style.display = '';
+  }
+
+  function confirmarResgate() {
+    if (!cortesiaAtual) return;
+    marcarResgate(cortesiaAtual.id, cortesiaAtual);
+    const card = document.getElementById('resultado-card');
+    card.classList.remove('invalid');
+    card.classList.add('redeemed');
+    card.querySelector('.status').textContent = '✓ CORTESIA RESGATADA';
+    card.querySelector('.sub').textContent = 'Resgatada agora. Boa massagem!';
+    card.querySelector('.minlbl').textContent = 'MIN — JÁ UTILIZADA';
+    const $metas = card.querySelectorAll('.meta');
+    $metas[1].innerHTML = `Resgatada em <strong>${formatData(Date.now())}</strong>`;
+    const $btn = document.getElementById('btn-resgatar');
+    $btn.disabled = true;
+    $btn.textContent = '✓ Resgatada';
+    $btn.style.display = 'none';
+    cortesiaAtual = null;
   }
 
   (function checarURL() {
