@@ -388,6 +388,26 @@
     color: var(--muted); margin-top: 10px;
   }
 
+  .cam-start {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 14px;
+    background: linear-gradient(180deg, rgba(61,38,21,.85), rgba(10,5,2,.95));
+    color: var(--gold-bright);
+    border: none; cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: .14em;
+    z-index: 2;
+  }
+  .cam-start .icon { font-size: 44px; line-height: 1; }
+  .cam-diag {
+    margin-top: 10px; min-height: 18px;
+    text-align: center; font-family: 'DM Sans', sans-serif;
+    font-size: 12px; color: var(--muted);
+    padding: 0 6px; line-height: 1.5;
+  }
+  .cam-diag .err { color: var(--bad); }
+
   .read-result {
     text-align: center; padding: 20px 18px;
     background: linear-gradient(180deg, rgba(61,38,21,.8), rgba(26,13,5,.9));
@@ -586,8 +606,13 @@
       <div class="scanner-frame">
         <div id="reader"></div>
         <div class="scanner-corners"><span></span></div>
+        <button id="cam-start-btn" class="cam-start" onclick="iniciarScannerComToque()">
+          <span class="icon">📷</span>
+          <span>TOCAR PARA<br>INICIAR CÂMERA</span>
+        </button>
       </div>
       <p class="scan-hint">APONTE A CÂMERA PARA O QR CODE</p>
+      <div id="cam-diag" class="cam-diag"></div>
     </div>
 
     <div id="ler-resultado" style="display:none;">
@@ -606,7 +631,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
 <script>
   (function makeSparkles() {
     const c = document.getElementById('sparkles');
@@ -625,7 +650,7 @@
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    if (id === 'ler') iniciarScanner();
+    if (id === 'ler') prepararScanner();
     if (id === 'gerar') resetGerarForm();
   }
 
@@ -699,21 +724,58 @@
   }
 
   let scanner = null;
-  function iniciarScanner() {
+  function prepararScanner() {
     document.getElementById('ler-scanner').style.display = '';
     document.getElementById('ler-resultado').style.display = 'none';
-    if (scanner) return;
-    scanner = new Html5Qrcode("reader");
-    scanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 240, height: 240 } },
-      onLeitura, () => {}
-    ).catch(err => {
-      document.getElementById('reader').innerHTML =
-        `<div style="color:#f5e6c8;padding:30px;text-align:center;font-family:'DM Sans',sans-serif;">
-          Não consegui abrir a câmera.<br><small style="opacity:.6">${err}</small>
-         </div>`;
-    });
+    document.getElementById('cam-start-btn').style.display = '';
+    document.getElementById('cam-diag').innerHTML = '';
+    document.getElementById('reader').innerHTML = '';
+  }
+  async function iniciarScannerComToque() {
+    const diag = document.getElementById('cam-diag');
+    const btn  = document.getElementById('cam-start-btn');
+    btn.style.display = 'none';
+    diag.innerHTML = 'Pedindo permissão de câmera…';
+
+    if (typeof Html5Qrcode === 'undefined') {
+      diag.innerHTML = '<span class="err">A biblioteca de leitura QR não carregou. Verifique sua internet e atualize (F5).</span>';
+      btn.style.display = '';
+      return;
+    }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      diag.innerHTML = '<span class="err">Este navegador não suporta câmera. Tente abrir no Chrome.</span>';
+      btn.style.display = '';
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
+      stream.getTracks().forEach(t => t.stop());
+
+      diag.innerHTML = 'Abrindo câmera…';
+      scanner = new Html5Qrcode("reader");
+      await scanner.start(
+        { facingMode: { ideal: 'environment' } },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        onLeitura,
+        () => {}
+      );
+      diag.innerHTML = '';
+    } catch (err) {
+      let msg = String(err && (err.message || err.name || err) || 'Erro desconhecido');
+      if (/Permission|NotAllowed|denied/i.test(msg)) {
+        msg = 'Permissão de câmera negada. Toque no cadeado na barra de endereço → Permissões → Câmera → Permitir, depois atualize.';
+      } else if (/NotFound|NotFoundError/i.test(msg)) {
+        msg = 'Nenhuma câmera encontrada neste aparelho.';
+      } else if (/NotReadable|TrackStart/i.test(msg)) {
+        msg = 'Câmera está sendo usada por outro app. Feche os outros apps e tente de novo.';
+      } else if (/Overconstrained/i.test(msg)) {
+        msg = 'Câmera traseira não disponível — tente outra vez.';
+      }
+      diag.innerHTML = `<span class="err">${msg}</span>`;
+      btn.style.display = '';
+      scanner = null;
+    }
   }
   function parar(destino) {
     if (scanner) {
@@ -724,8 +786,11 @@
   function lerOutra() {
     document.getElementById('ler-resultado').style.display = 'none';
     document.getElementById('ler-scanner').style.display = '';
-    if (!scanner) iniciarScanner();
-    else if (scanner.resume) scanner.resume();
+    if (scanner && scanner.resume) {
+      try { scanner.resume(); document.getElementById('cam-start-btn').style.display = 'none'; return; } catch(e) {}
+    }
+    scanner = null;
+    prepararScanner();
   }
   function onLeitura(texto) {
     if (scanner) { try { scanner.pause(true); } catch(e) {} }
