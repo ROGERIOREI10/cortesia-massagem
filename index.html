@@ -735,7 +735,7 @@
     const diag = document.getElementById('cam-diag');
     const btn  = document.getElementById('cam-start-btn');
     btn.style.display = 'none';
-    diag.innerHTML = 'Pedindo permissão de câmera…';
+    diag.innerHTML = 'Abrindo câmera…';
 
     if (typeof Html5Qrcode === 'undefined') {
       diag.innerHTML = '<span class="err">A biblioteca de leitura QR não carregou. Verifique sua internet e atualize (F5).</span>';
@@ -748,11 +748,15 @@
       return;
     }
 
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
-      stream.getTracks().forEach(t => t.stop());
+    // Limpa scanner anterior caso ainda esteja ativo
+    if (scanner) {
+      try { await scanner.stop(); } catch(e) {}
+      try { scanner.clear(); } catch(e) {}
+      scanner = null;
+    }
+    document.getElementById('reader').innerHTML = '';
 
-      diag.innerHTML = 'Abrindo câmera…';
+    try {
       scanner = new Html5Qrcode("reader");
       await scanner.start(
         { facingMode: { ideal: 'environment' } },
@@ -779,21 +783,22 @@
   }
   function parar(destino) {
     if (scanner) {
-      scanner.stop().then(() => { scanner.clear(); scanner = null; show(destino); })
+      scanner.stop().then(() => { try { scanner.clear(); } catch(e){} scanner = null; show(destino); })
         .catch(() => { scanner = null; show(destino); });
     } else { show(destino); }
   }
   function lerOutra() {
     document.getElementById('ler-resultado').style.display = 'none';
     document.getElementById('ler-scanner').style.display = '';
-    if (scanner && scanner.resume) {
-      try { scanner.resume(); document.getElementById('cam-start-btn').style.display = 'none'; return; } catch(e) {}
-    }
-    scanner = null;
-    prepararScanner();
+    // A permissão já foi dada antes — abre câmera direto, sem precisar tocar de novo.
+    iniciarScannerComToque();
   }
   function onLeitura(texto) {
-    if (scanner) { try { scanner.pause(true); } catch(e) {} }
+    // Para a câmera totalmente — fica mais leve e o "Ler outra" começa do zero
+    if (scanner) {
+      scanner.stop().then(() => { try { scanner.clear(); } catch(e){} scanner = null; })
+        .catch(() => { scanner = null; });
+    }
     mostrarResultado(texto);
   }
   function parsePayload(texto) {
