@@ -612,19 +612,24 @@
   .cartao-item.premio .cartao-meta { color: var(--gold-bright); }
 
   .seal-bar {
-    display: flex; gap: 6px;
+    display: flex; gap: 4px;
     justify-content: center;
     margin: 14px 0;
+    flex-wrap: wrap;
   }
   .seal {
-    width: 36px; height: 36px;
+    width: 30px; height: 30px;
     border-radius: 50%;
     background: rgba(0,0,0,.4);
     border: 2px dashed rgba(199,145,54,.3);
     display: flex; align-items: center; justify-content: center;
     color: rgba(199,145,54,.3);
-    font-size: 16px;
+    font-size: 13px;
     transition: all .3s;
+  }
+  @media (max-width: 380px) {
+    .seal { width: 26px; height: 26px; font-size: 12px; }
+    .seal-bar { gap: 3px; }
   }
   .seal.filled {
     background: linear-gradient(180deg, var(--gold-bright), var(--gold));
@@ -965,7 +970,8 @@
         <div class="card-notas" style="display:none;"></div>
       </div>
       <button id="btn-resgatar" class="btn" onclick="confirmarResgate()" style="display:none;">✓ Resgatar Cortesia</button>
-      <button id="btn-carimbar" class="btn" onclick="carimbarCartao()" style="display:none;">+ 1 SELO (sessão paga)</button>
+      <button id="btn-carimbar-5" class="btn" onclick="carimbarCartao(1)" style="display:none;">+ 1 SELO (5 min pagos)</button>
+      <button id="btn-carimbar-10" class="btn" onclick="carimbarCartao(2)" style="display:none;">+ 2 SELOS (10 min pagos)</button>
       <button id="btn-resgatar-premio" class="btn" onclick="resgatarPremio()" style="display:none;">🎁 Resgatar Prêmio (15 min)</button>
       <button class="btn outline" onclick="lerOutra()">Ler Outra</button>
       <button class="btn ghost" onclick="parar('home')">Voltar ao início</button>
@@ -1296,8 +1302,9 @@
 
   // ====== FIDELIDADE (cartões + selos) ======
   const CARTOES_KEY = 'cartoes_fidelidade';
-  const SELOS_OBJETIVO = 5;
+  const SELOS_OBJETIVO = 10;
   const PREMIO_MIN = 15;
+  // 5 min pago = 1 selo · 10 min pago = 2 selos · 10 selos = 15 min grátis
 
   function getCartoes() {
     try { return JSON.parse(localStorage.getItem(CARTOES_KEY)) || {}; }
@@ -1493,20 +1500,26 @@
     if (hist.length === 0) {
       list.innerHTML = '<li class="historico-empty">Sem registros ainda.</li>';
     } else {
-      list.innerHTML = hist.map(ev => `
-        <li class="historico-item">
-          <span class="ev ${ev.type === 'premio' ? 'premio' : ''}">
-            ${ev.type === 'premio' ? '🎁 Prêmio resgatado' : '+ 1 selo (sessão paga)'}
-          </span>
-          <span class="when">${formatData(ev.at)}</span>
-        </li>
-      `).join('');
+      list.innerHTML = hist.map(ev => {
+        let label;
+        if (ev.type === 'premio') label = '🎁 Prêmio resgatado';
+        else if (ev.qtd === 2) label = '+ 2 selos (10 min pagos)';
+        else label = '+ 1 selo (5 min pagos)';
+        return `
+          <li class="historico-item">
+            <span class="ev ${ev.type === 'premio' ? 'premio' : ''}">${label}</span>
+            <span class="when">${formatData(ev.at)}</span>
+          </li>
+        `;
+      }).join('');
     }
     const pr = card.premiosResgatados || 0;
-    const totSelos = card.historico.filter(e => e.type === 'selo').length;
+    const eventosSelo = card.historico.filter(e => e.type === 'selo');
+    const totSessoes = eventosSelo.length;
+    const totMinPagos = eventosSelo.reduce((s, e) => s + (e.min || (e.qtd === 2 ? 10 : 5)), 0);
     document.getElementById('fid-stats').innerHTML =
-      `<strong style="color:var(--cream)">${totSelos}</strong> sess${totSelos === 1 ? 'ão' : 'ões'} paga${totSelos === 1 ? '' : 's'} no total · ` +
-      `<strong style="color:var(--gold-bright)">${pr}</strong> prêmio${pr === 1 ? '' : 's'} resgatado${pr === 1 ? '' : 's'}`;
+      `<strong style="color:var(--cream)">${totSessoes}</strong> sess${totSessoes === 1 ? 'ão' : 'ões'} (${totMinPagos} min pagos) · ` +
+      `<strong style="color:var(--gold-bright)">${pr}</strong> prêmio${pr === 1 ? '' : 's'}`;
   }
   function excluirCartaoAtual() {
     if (!cartaoAtualId) return;
@@ -1517,23 +1530,26 @@
   }
 
   // ====== Ações ao ler cartão na poltrona ======
-  function carimbarCartao() {
+  function carimbarCartao(qtd) {
+    qtd = qtd === 2 ? 2 : 1;
     if (!cartaoLidoAtual) return;
     const c = getCartao(cartaoLidoAtual.id);
     if (!c) return;
-    c.selos = Math.min((c.selos || 0) + 1, SELOS_OBJETIVO);
+    c.selos = Math.min((c.selos || 0) + qtd, SELOS_OBJETIVO);
     c.ultimoSelo = Date.now();
     c.historico = c.historico || [];
-    c.historico.push({ type: 'selo', at: Date.now() });
+    c.historico.push({ type: 'selo', at: Date.now(), qtd, min: qtd === 2 ? 10 : 5 });
     salvarCartao(c);
     cartaoLidoAtual = c;
 
     const cardEl = document.getElementById('resultado-card');
     cardEl.classList.remove('invalid', 'redeemed');
-    const $btnCarimbar = document.getElementById('btn-carimbar');
+    const $btn5 = document.getElementById('btn-carimbar-5');
+    const $btn10 = document.getElementById('btn-carimbar-10');
     const $btnPremio = document.getElementById('btn-resgatar-premio');
     if (c.selos >= SELOS_OBJETIVO) {
-      $btnCarimbar.style.display = 'none';
+      $btn5.style.display = 'none';
+      $btn10.style.display = 'none';
       $btnPremio.style.display = '';
       cardEl.querySelector('.status').textContent = '🎁 PRÊMIO LIBERADO';
       cardEl.querySelector('.big').textContent = c.nome;
@@ -1541,7 +1557,8 @@
       cardEl.querySelector('.sub').textContent = `Massagem de ${PREMIO_MIN} minutos liberada!`;
     } else {
       cardEl.querySelector('.minlbl').textContent = `${c.selos}/${SELOS_OBJETIVO} SELOS`;
-      cardEl.querySelector('.sub').textContent = `Faltam ${SELOS_OBJETIVO - c.selos} selo${SELOS_OBJETIVO - c.selos === 1 ? '' : 's'} pra ganhar massagem.`;
+      const faltam = SELOS_OBJETIVO - c.selos;
+      cardEl.querySelector('.sub').textContent = `Faltam ${faltam} selo${faltam === 1 ? '' : 's'} pra ganhar massagem.`;
       const $metas = cardEl.querySelectorAll('.meta');
       $metas[1].innerHTML = `Último selo: <strong>${formatData(c.ultimoSelo)}</strong>`;
     }
@@ -1729,13 +1746,15 @@
     const $sub = card.querySelector('.sub');
     const $metas = card.querySelectorAll('.meta');
     const $btnResg = document.getElementById('btn-resgatar');
-    const $btnCarimbar = document.getElementById('btn-carimbar');
+    const $btnCarimbar5 = document.getElementById('btn-carimbar-5');
+    const $btnCarimbar10 = document.getElementById('btn-carimbar-10');
     const $btnPremio = document.getElementById('btn-resgatar-premio');
     const $notas = card.querySelector('.card-notas');
     $btnResg.style.display = 'none';
     $btnResg.disabled = false;
     $btnResg.textContent = '✓ Resgatar Cortesia';
-    $btnCarimbar.style.display = 'none';
+    $btnCarimbar5.style.display = 'none';
+    $btnCarimbar10.style.display = 'none';
     $btnPremio.style.display = 'none';
     $notas.style.display = 'none';
     $notas.innerHTML = '';
@@ -1787,7 +1806,8 @@
           $metas[1].innerHTML = cartao.ultimoSelo
             ? `Último selo: <strong>${formatData(cartao.ultimoSelo)}</strong>`
             : '';
-          $btnCarimbar.style.display = '';
+          $btnCarimbar5.style.display = '';
+          $btnCarimbar10.style.display = '';
         }
         // Anotações visíveis se houver
         if (cartao.notas) {
