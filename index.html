@@ -1010,6 +1010,8 @@
         <p class="home-btn-sub">Cartões de selos dos clientes</p>
       </div>
     </button>
+
+    <button class="admin-link" onclick="lockAdmin()" style="margin-top:auto;">🔒 bloquear admin agora</button>
   </section>
 
   <!-- ====== BRINDE ====== -->
@@ -1252,8 +1254,26 @@
 
   // ====== ADMIN PIN ======
   const ADMIN_PIN = '8110'; // <— TROQUE AQUI SE QUISER OUTRO PIN
+  const ADMIN_UNLOCK_KEY = 'admin_unlocked_until';
+  const ADMIN_UNLOCK_MS = 24 * 60 * 60 * 1000; // 24 horas
+
+  function isAdminUnlocked() {
+    const until = parseInt(localStorage.getItem(ADMIN_UNLOCK_KEY) || '0', 10);
+    return until > Date.now();
+  }
+  function unlockAdmin() {
+    localStorage.setItem(ADMIN_UNLOCK_KEY, String(Date.now() + ADMIN_UNLOCK_MS));
+  }
+  function lockAdmin() {
+    localStorage.removeItem(ADMIN_UNLOCK_KEY);
+    show('home');
+  }
 
   function abrirPin() {
+    if (isAdminUnlocked()) {
+      show('admin');
+      return;
+    }
     document.getElementById('pin-input').value = '';
     document.getElementById('pin-erro').textContent = '';
     document.getElementById('pin-modal').style.display = 'flex';
@@ -1265,6 +1285,7 @@
   function verificarPin() {
     const v = document.getElementById('pin-input').value;
     if (v === ADMIN_PIN) {
+      unlockAdmin();
       fecharPin();
       show('admin');
     } else {
