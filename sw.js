@@ -1,4 +1,4 @@
-const CACHE = 'cortesia-v1';
+const CACHE = 'cortesia-v2';
 const ASSETS = [
   './',
   './index.html',
