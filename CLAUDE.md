@@ -21,6 +21,9 @@ em outubro/2026 para o evento BALÃO PREMIADO.
   dele (QR, lojas, validade), sem acesso ao app. Se o aparelho tem senha da equipe, aparece o
   botão "Sou da equipe: marcar como usado".
 - Resgates ficam no `localStorage` do celular que leu (chave `baloes_resgatados`).
+- **Card do prêmio (o que o cliente fotografa)**: cabe inteiro na tela do celular (testado em
+  360×660) — tamanhos em `vh`. **Nunca mostrar o valor da compra pro cliente** (Rogério: pode
+  confundir, "achar que tem R$100 em compras"); só "⏰ Válido até". O valor continua no leitor.
 - **Contexto completo** nas memórias da pasta.
 
 ## Regras de ouro
