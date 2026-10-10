@@ -451,7 +451,7 @@
   </header>
 
   <!-- ====== HOME ====== -->
-  <section id="home" class="screen active">
+  <section id="home" class="screen">
     <button class="home-btn pink" onclick="show('gerar')">
       <div class="home-btn-circle">🎈</div>
       <div>
@@ -481,7 +481,24 @@
       <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Mar</div><div class="shop">Nova loja <b>Reizinho Brinquedos</b></div></div></div>
     </div>
 
-    <button class="admin-link" onclick="abrirPin()">🔐 admin</button>
+    <div style="display:flex; justify-content:center; gap:22px; margin-top:auto;">
+      <button class="admin-link" style="margin-top:0;" onclick="abrirPin()">🔐 admin</button>
+      <button class="admin-link" style="margin-top:0;" onclick="lockStaff()">🔒 sair</button>
+    </div>
+  </section>
+
+  <!-- ====== LOGIN DA EQUIPE ====== -->
+  <section id="login" class="screen">
+    <div class="card" style="text-align:center;">
+      <p class="card-title">🔒 Acesso da equipe</p>
+      <p style="font-size:13px; color:var(--muted); font-weight:600; margin:0 0 12px;">Digite a senha pra gerar ou ler cortesias.</p>
+      <input id="staff-pin" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••" class="pin-input" autocomplete="off">
+      <div id="staff-erro" style="font-size:13px; font-weight:700; color:var(--bad); min-height:18px; margin-bottom:6px;"></div>
+      <button class="btn blue" onclick="verificarStaffPin()">Entrar</button>
+    </div>
+    <p style="text-align:center; color:var(--muted); font-size:12px; font-weight:600; line-height:1.5;">
+      É cliente? Você não precisa entrar aqui.<br>É só mostrar o QR Code na loja dos balões. 🎈
+    </p>
   </section>
 
   <!-- ====== GERAR ====== -->
@@ -665,6 +682,41 @@
       </div>
     </div>
   </section>
+
+  <!-- ====== TELA DO CLIENTE (abriu o link lendo o QR com a câmera) ====== -->
+  <section id="cliente" class="screen">
+    <div id="cliente-status" class="card" style="text-align:center; padding:12px; font-size:14px;"></div>
+    <article class="premio-card" id="cliente-card">
+      <span class="ribbon">🎈 BALÃO PREMIADO · DIA DAS CRIANÇAS</span>
+      <div class="headline" id="c-headline">
+        <div class="txt">
+          <span class="line-1">VOCÊ GANHOU</span>
+          <span class="big-num" id="c-b">1</span>
+          <span class="line-2" id="c-b-lbl">BALÃO PREMIADO!</span>
+        </div>
+      </div>
+      <div class="qr-frame"><div id="qrcode-cliente"></div></div>
+      <div class="onde">
+        <p class="t">Vá estourar em uma dessas lojas</p>
+        <div class="row">📍 <b>Centro Comercial da Onda</b> · Princesinha Shop</div>
+        <div class="row">📍 <b>Shopping Praia do Morro</b> · Princesinha Shop</div>
+        <div class="row">📍 <b>Shopping Mar</b> · Reizinho Brinquedos (loja nova)</div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-item"><div class="k" id="c-k">Compra</div><div class="v" id="c-valor">—</div></div>
+        <div class="meta-item"><div class="k">Válido até</div><div class="v" id="c-validade">—</div></div>
+      </div>
+      <div class="footer-brand">Princesinha Shop · Reizinho Brinquedos</div>
+    </article>
+    <div id="cliente-invalido" class="card" style="display:none; text-align:center;">
+      <p class="card-title" style="color:var(--bad);">⛔ QR inválido</p>
+      <p style="font-size:13px; color:var(--muted); font-weight:600; margin:0;">Este link não é uma cortesia válida do Balão Premiado.</p>
+    </div>
+    <button id="btn-equipe" class="btn green" style="display:none;" onclick="abrirNoLeitor()">✓ Sou da equipe: marcar como usado</button>
+    <p style="text-align:center; color:var(--muted); font-size:12px; font-weight:600; line-height:1.5;">
+      Mostre esta tela (ou a foto do QR) na loja dos balões.
+    </p>
+  </section>
 </div>
 
 <!-- ====== MODAL PIN ====== -->
@@ -735,13 +787,16 @@
   }
 
   /* ====== Navegação ====== */
+  const TELAS_EQUIPE = ['home', 'gerar', 'ler', 'admin', 'brinde'];
   function show(id) {
+    if (TELAS_EQUIPE.includes(id) && !isStaffUnlocked()) id = 'login'; // sem senha da equipe, não entra
     document.body.classList.remove('result-mode');
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     if (id === 'ler') prepararScanner();
     if (id === 'gerar') resetGerarForm();
     if (id === 'brinde') resetBrinde();
+    if (id === 'login') setTimeout(() => document.getElementById('staff-pin').focus(), 150);
     window.scrollTo({ top: 0 });
   }
 
@@ -765,15 +820,21 @@
   function idCurto() { return Math.random().toString(36).slice(2, 8); }
   const VALIDADE_MS = 24 * 3600 * 1000;
 
+  /* ====== localStorage protegido (modo anônimo / storage bloqueado não derruba o app) ====== */
+  function ls() { return window.localStorage; }
+  function lsGet(k) { try { return ls().getItem(k); } catch { return null; } }
+  function lsSet(k, v) { try { ls().setItem(k, v); } catch {} }
+  function lsDel(k) { try { ls().removeItem(k); } catch {} }
+
   /* ====== Resgates (localStorage) ====== */
   const REDEEMED_KEY = 'baloes_resgatados';
   function getResgates() {
-    try { return JSON.parse(localStorage.getItem(REDEEMED_KEY)) || {}; } catch { return {}; }
+    try { return JSON.parse(lsGet(REDEEMED_KEY)) || {}; } catch { return {}; }
   }
   function salvarResgates(map) {
     const cutoff = Date.now() - 7*24*3600*1000;
     for (const k in map) { if (map[k].at < cutoff) delete map[k]; }
-    localStorage.setItem(REDEEMED_KEY, JSON.stringify(map));
+    lsSet(REDEEMED_KEY, JSON.stringify(map));
   }
   function buscarResgate(id) { return getResgates()[id]; }
   function marcarResgate(id, data) {
@@ -784,9 +845,9 @@
   /* ====== ADMIN PIN (fica desbloqueado 24h) ====== */
   const ADMIN_PIN = '8110'; // <— TROQUE AQUI SE QUISER OUTRO PIN
   const ADMIN_UNLOCK_KEY = 'admin_unlocked_until';
-  function isAdminUnlocked() { return parseInt(localStorage.getItem(ADMIN_UNLOCK_KEY) || '0', 10) > Date.now(); }
-  function unlockAdmin() { localStorage.setItem(ADMIN_UNLOCK_KEY, String(Date.now() + VALIDADE_MS)); }
-  function lockAdmin() { localStorage.removeItem(ADMIN_UNLOCK_KEY); show('home'); }
+  function isAdminUnlocked() { return parseInt(lsGet(ADMIN_UNLOCK_KEY) || '0', 10) > Date.now(); }
+  function unlockAdmin() { lsSet(ADMIN_UNLOCK_KEY, String(Date.now() + VALIDADE_MS)); }
+  function lockAdmin() { lsDel(ADMIN_UNLOCK_KEY); show('home'); }
   function abrirPin() {
     if (isAdminUnlocked()) { show('admin'); return; }
     document.getElementById('pin-input').value = '';
@@ -803,6 +864,52 @@
   document.getElementById('pin-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') { e.preventDefault(); verificarPin(); }
   });
+
+  /* ====== SENHA DA EQUIPE (funcionárias) — fica memorizada 30 dias ====== */
+  const STAFF_PIN = '7391'; // <— TROQUE AQUI A SENHA DA EQUIPE
+  const STAFF_UNLOCK_KEY = 'staff_unlocked_until';
+  const STAFF_UNLOCK_MS = 30 * 24 * 3600 * 1000;
+  function isStaffUnlocked() {
+    return parseInt(lsGet(STAFF_UNLOCK_KEY) || '0', 10) > Date.now() || isAdminUnlocked();
+  }
+  function unlockStaff() { lsSet(STAFF_UNLOCK_KEY, String(Date.now() + STAFF_UNLOCK_MS)); }
+  function lockStaff() {
+    lsDel(STAFF_UNLOCK_KEY);
+    lsDel(ADMIN_UNLOCK_KEY);
+    show('login');
+  }
+  function verificarStaffPin() {
+    const v = document.getElementById('staff-pin').value;
+    if (v === STAFF_PIN || v === ADMIN_PIN) {
+      unlockStaff();
+      if (v === ADMIN_PIN) unlockAdmin();
+      document.getElementById('staff-pin').value = '';
+      show('home');
+    } else {
+      document.getElementById('staff-erro').textContent = 'Senha incorreta';
+      document.getElementById('staff-pin').value = '';
+    }
+  }
+  document.getElementById('staff-pin').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); verificarStaffPin(); }
+  });
+
+  /* ====== ASSINATURA DO QR (impede QR forjado/alterado) ====== */
+  const SEGREDO = 'balao-premiado-2026-princesinha-reizinho'; // tempero da assinatura
+  function cyrb53(str, seed = 0) {
+    let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for (let i = 0, ch; i < str.length; i++) {
+      ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507); h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507); h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+  }
+  function assinar(vStr, bStr, tStr, id, brinde) {
+    return cyrb53(`${SEGREDO}|${vStr}|${bStr}|${tStr}|${id}|${brinde ? 1 : 0}`).toString(36);
+  }
 
   /* ====== Máscara de dinheiro ====== */
   const valorInput = document.getElementById('valor');
@@ -849,7 +956,9 @@
     if (valor < 100) { erro.innerHTML = `<div class="error">Valor mínimo R$ 100,00 — faltam ${formatBRL(100 - valor)}.</div>`; return; }
     const b = baloesPara(valor);
     const ts = Date.now();
-    const payload = `${baseURL()}?v=${valor.toFixed(2)}&b=${b}&t=${ts}&id=${idCurto()}`;
+    const vStr = valor.toFixed(2), bStr = String(b), tStr = String(ts), id = idCurto();
+    const s = assinar(vStr, bStr, tStr, id, false);
+    const payload = `${baseURL()}?v=${vStr}&b=${bStr}&t=${tStr}&id=${id}&s=${s}`;
     desenharQR('qrcode', payload);
     document.getElementById('g-b').textContent = b;
     document.getElementById('g-b-lbl').textContent = labelBaloes(b);
@@ -870,7 +979,9 @@
   }
   function gerarBrinde(b) {
     const ts = Date.now();
-    const payload = `${baseURL()}?v=0&b=${b}&t=${ts}&id=${idCurto()}&brinde=1`;
+    const vStr = '0', bStr = String(b), tStr = String(ts), id = idCurto();
+    const s = assinar(vStr, bStr, tStr, id, true);
+    const payload = `${baseURL()}?v=${vStr}&b=${bStr}&t=${tStr}&id=${id}&brinde=1&s=${s}`;
     desenharQR('qrcode-brinde', payload);
     document.getElementById('b-b').textContent = b;
     document.getElementById('b-b-lbl').textContent = labelBaloes(b);
@@ -948,12 +1059,13 @@
       let url;
       try { url = new URL(texto); } catch { url = new URL(texto, window.location.origin); }
       const p = url.searchParams;
-      const v = parseFloat(p.get('v'));
-      const b = parseInt(p.get('b'), 10);
-      const t = parseInt(p.get('t'), 10);
+      const vStr = p.get('v'), bStr = p.get('b'), tStr = p.get('t');
       const id = p.get('id') || '';
+      const s = p.get('s') || '';
       const brinde = p.get('brinde') === '1';
+      const v = parseFloat(vStr), b = parseInt(bStr, 10), t = parseInt(tStr, 10);
       if (isNaN(v) || isNaN(b) || isNaN(t) || b < 1) return null;
+      if (s !== assinar(vStr, bStr, tStr, id, brinde)) return null; // assinatura não confere → forjado/alterado
       return { v, b, t, id, brinde };
     } catch { return null; }
   }
@@ -1027,13 +1139,47 @@
     cortesiaAtual = null;
   }
 
-  /* ====== Abertura direta por URL (QR lido por leitor genérico) ====== */
-  (function checarURL() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('v') && params.has('b') && params.has('t')) {
-      show('ler');
-      setTimeout(() => mostrarResultado(window.location.href), 200);
+  /* ====== Tela do cliente (abriu o link lendo o QR com a câmera) ====== */
+  function mostrarCliente(href) {
+    show('cliente');
+    const data = parsePayload(href);
+    const $status = document.getElementById('cliente-status');
+    const $card = document.getElementById('cliente-card');
+    const $inv = document.getElementById('cliente-invalido');
+    const $btnEq = document.getElementById('btn-equipe');
+    $btnEq.style.display = 'none';
+    if (!data) {
+      $card.style.display = 'none'; $status.style.display = 'none'; $inv.style.display = '';
+      return;
     }
+    $inv.style.display = 'none'; $card.style.display = ''; $status.style.display = '';
+    const validade = data.t + VALIDADE_MS;
+    const expirado = Date.now() > validade;
+    $status.innerHTML = expirado
+      ? `<span style="color:var(--bad); font-weight:800;">⛔ Cortesia expirada em ${formatData(validade)}</span>`
+      : `<span style="color:var(--good); font-weight:800;">✅ Cortesia válida até ${formatData(validade)}</span>`;
+    document.getElementById('c-b').textContent = data.b;
+    document.getElementById('c-b-lbl').textContent = labelBaloes(data.b);
+    document.getElementById('c-k').textContent = data.brinde ? 'Tipo' : 'Compra';
+    document.getElementById('c-valor').textContent = data.brinde ? '🎁 BRINDE' : formatBRL(data.v);
+    document.getElementById('c-validade').textContent = formatData(validade);
+    const head = document.getElementById('c-headline');
+    if (!head.querySelector('.illus')) {
+      head.insertBefore(document.querySelector('#gerar-resultado .illus').cloneNode(true), head.firstChild);
+    }
+    desenharQR('qrcode-cliente', href);
+    if (isStaffUnlocked()) $btnEq.style.display = ''; // funcionária que leu com a câmera do celular
+  }
+  function abrirNoLeitor() {
+    show('ler');
+    mostrarResultado(window.location.href);
+  }
+
+  /* ====== Início ====== */
+  (function iniciar() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('v') && params.has('b') && params.has('t')) mostrarCliente(window.location.href);
+    else show('home'); // cai no login se a equipe ainda não digitou a senha
   })();
 
   /* ====== Service Worker (PWA) ====== */
