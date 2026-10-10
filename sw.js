@@ -1,8 +1,7 @@
-const CACHE = 'cortesia-v3';
+const CACHE = 'balao-v1';
 const ASSETS = [
   './',
   './index.html',
-  './cadeira.png',
   './icon-192.png',
   './icon-512.png',
   './manifest.json'
@@ -47,7 +46,7 @@ self.addEventListener('fetch', event => {
         .catch(() => caches.match(event.request).then(r => r || caches.match('./')))
     );
   } else {
-    // cache-first pra assets (icones, cadeira.png, manifest)
+    // cache-first pra assets (icones, manifest)
     event.respondWith(
       caches.match(event.request).then(cached => cached || fetch(event.request).then(resp => {
         if (resp.ok) {

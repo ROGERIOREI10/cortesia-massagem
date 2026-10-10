@@ -3,886 +3,471 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cortesia Massagem · Trono da Massagem</title>
+<title>Balão Premiado · Dia das Crianças</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a0d05">
+<meta name="theme-color" content="#4cc9f0">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Cortesia">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Balão Premiado">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@500;700&family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --wood-1: #0a0502;
-    --wood-2: #1a0d05;
-    --wood-3: #2a1a0c;
-    --wood-4: #3d2615;
-    --gold-deep: #8a5a1f;
-    --gold: #c79136;
-    --gold-bright: #f0c068;
-    --gold-pale: #f8e3b3;
-    --cream: #f5e6c8;
-    --muted: #a07c4a;
-    --bad: #c94545;
-    --good: #4caf7a;
+    --sky-1: #7fd0ff;
+    --sky-2: #d9f1ff;
+    --cream: #fff8e7;
+    --white: #ffffff;
+    --ink: #2b2d5c;
+    --muted: #6b7a99;
+    --red: #ff4d6d;
+    --pink: #ff8fab;
+    --orange: #ff9f1c;
+    --yellow: #ffd23f;
+    --green: #3ddc84;
+    --blue: #4cc9f0;
+    --purple: #b388ff;
+    --good: #22c55e;
+    --bad: #ef4444;
+    --warn: #f59e0b;
+    --shadow: 0 12px 30px rgba(43,45,92,.14);
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     margin: 0; padding: 0;
-    background: var(--wood-1);
-    color: var(--cream);
-    font-family: 'DM Sans', sans-serif;
+    background: var(--sky-2);
+    color: var(--ink);
+    font-family: 'Nunito', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
   }
   body::before {
     content: '';
-    position: fixed; inset: 0;
+    position: fixed; inset: 0; z-index: -2;
     background:
-      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(199,145,54,0.18), transparent 60%),
-      radial-gradient(ellipse 90% 80% at 50% 110%, rgba(138,90,31,0.20), transparent 50%),
-      linear-gradient(180deg, var(--wood-2) 0%, var(--wood-1) 100%);
-    z-index: -2;
+      radial-gradient(ellipse 70% 40% at 50% -10%, rgba(255,255,255,.9), transparent 60%),
+      linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 55%, #fff1c9 100%);
   }
+  /* nuvens suaves */
   body::after {
     content: '';
-    position: fixed; inset: 0;
-    background-image:
-      repeating-linear-gradient(92deg,
-        rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px,
-        rgba(255,200,100,0.018) 2px, rgba(255,200,100,0.018) 4px,
-        rgba(0,0,0,0.035) 4px, rgba(0,0,0,0.035) 7px);
-    mix-blend-mode: overlay;
-    opacity: .6;
-    pointer-events: none;
-    z-index: -1;
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(255,255,255,.85) 0 38px, transparent 40px),
+      radial-gradient(circle at 20% 22%, rgba(255,255,255,.85) 0 50px, transparent 52px),
+      radial-gradient(circle at 28% 18%, rgba(255,255,255,.85) 0 34px, transparent 36px),
+      radial-gradient(circle at 80% 10%, rgba(255,255,255,.8) 0 30px, transparent 32px),
+      radial-gradient(circle at 87% 13%, rgba(255,255,255,.8) 0 42px, transparent 44px),
+      radial-gradient(circle at 94% 10%, rgba(255,255,255,.8) 0 28px, transparent 30px);
+    opacity: .9;
   }
 
-  .palm {
-    position: fixed; bottom: -20px;
-    width: 140px; height: 240px;
-    opacity: .28; pointer-events: none; z-index: 0;
+  /* ====== BALÕES FLUTUANDO NO FUNDO ====== */
+  .sky { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .bg-balloon {
+    position: absolute;
+    bottom: -140px;
+    width: 46px; height: 58px;
+    border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+    opacity: .85;
+    box-shadow: inset -8px -10px 0 rgba(0,0,0,.08), inset 6px 8px 0 rgba(255,255,255,.35);
+    animation: rise linear infinite;
   }
-  .palm.left  { left: -40px; transform: scaleX(-1); }
-  .palm.right { right: -40px; }
+  .bg-balloon::after {           /* nó */
+    content: ''; position: absolute; left: 50%; bottom: -7px;
+    width: 10px; height: 8px; transform: translateX(-50%);
+    background: inherit; clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  }
+  .bg-balloon::before {          /* fio */
+    content: ''; position: absolute; left: 50%; bottom: -46px;
+    width: 1.5px; height: 40px; background: rgba(43,45,92,.35);
+    transform: translateX(-50%) rotate(6deg); transform-origin: top;
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0) rotate(-3deg); }
+    50%  { transform: translateY(-55vh) translateX(18px) rotate(4deg); }
+    100% { transform: translateY(-120vh) translateX(-10px) rotate(-3deg); }
+  }
 
-  .sparkles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .spark {
-    position: absolute; width: 3px; height: 3px;
-    background: var(--gold-bright); border-radius: 50%;
-    box-shadow: 0 0 6px var(--gold-bright), 0 0 12px rgba(240,192,104,.6);
-    animation: float 8s linear infinite, twinkle 2.4s ease-in-out infinite;
-    opacity: 0;
+  /* ====== CONFETE ====== */
+  .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
+  .confetti i {
+    position: absolute; top: -12px;
+    width: 9px; height: 14px; border-radius: 2px;
+    animation: fall linear forwards;
   }
-  @keyframes float {
-    0%   { transform: translateY(20vh) translateX(0); opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 1; }
-    100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
-  }
-  @keyframes twinkle {
-    0%, 100% { box-shadow: 0 0 4px var(--gold-bright), 0 0 8px rgba(240,192,104,.4); }
-    50%      { box-shadow: 0 0 10px var(--gold-bright), 0 0 18px rgba(240,192,104,.8); }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(105vh) rotate(720deg); opacity: .9; }
   }
 
+  /* ====== LAYOUT ====== */
   .app {
     position: relative; z-index: 2;
-    max-width: 440px; margin: 0 auto;
-    padding: 14px 16px 24px;
+    max-width: 460px; margin: 0 auto;
+    padding: 20px 16px 36px;
     min-height: 100vh;
     display: flex; flex-direction: column;
   }
-
-  header.brand {
-    text-align: center;
-    margin-bottom: 14px;
-  }
-  .crown {
-    width: 38px; height: 38px;
-    margin: 0 auto 4px;
-    display: block;
-    filter: drop-shadow(0 2px 6px rgba(240,192,104,.4));
-  }
+  header.brand { text-align: center; margin-bottom: 18px; }
+  .brand-logo { width: 72px; height: 84px; margin: 0 auto 2px; display: block; filter: drop-shadow(0 6px 10px rgba(43,45,92,.2)); animation: bob 3.2s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-6px) rotate(2deg); } }
   .brand-title {
-    font-family: 'Cinzel', serif; font-weight: 700;
-    letter-spacing: .35em; font-size: 11px;
-    color: var(--gold-bright); margin: 0;
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 34px; line-height: 1; margin: 0;
+    color: var(--white);
+    text-shadow: 0 3px 0 #2b2d5c, 0 6px 14px rgba(43,45,92,.25);
+    letter-spacing: .01em;
+  }
+  .brand-sub {
+    font-family: 'Baloo 2', cursive; font-weight: 700;
+    font-size: 14px; color: var(--ink); margin: 6px 0 0;
+    background: var(--yellow); display: inline-block;
+    padding: 3px 14px; border-radius: 999px;
+    box-shadow: 0 3px 0 rgba(43,45,92,.15);
   }
 
   .screen { display: none; flex: 1; flex-direction: column; }
   .screen.active { display: flex; animation: fadeUp .45s ease-out; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
+  /* ====== CARDS ====== */
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 16px; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--ink); margin: 0 0 10px; text-align: center;
+  }
+
+  /* ====== BOTÕES ====== */
   .btn {
     display: block; width: 100%;
-    padding: 14px 22px; margin-bottom: 10px;
-    background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%);
-    color: #2a1607;
-    border: 1px solid var(--gold-pale);
-    border-radius: 12px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px; letter-spacing: .12em;
+    padding: 16px 20px; margin-bottom: 12px;
+    background: linear-gradient(180deg, #ff6b8a 0%, var(--red) 100%);
+    color: var(--white);
+    border: none; border-radius: 999px;
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 20px; letter-spacing: .03em;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 0 rgba(0,0,0,.15);
-    transition: transform .08s;
-    text-transform: uppercase;
+    box-shadow: 0 6px 0 #c9304e, 0 12px 24px rgba(255,77,109,.3);
+    transition: transform .08s, box-shadow .08s;
   }
-  .btn:active { transform: translateY(2px); }
+  .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #c9304e, 0 6px 12px rgba(255,77,109,.3); }
+  .btn.blue { background: linear-gradient(180deg, #74d8ff 0%, var(--blue) 100%); box-shadow: 0 6px 0 #2a9cc4, 0 12px 24px rgba(76,201,240,.3); }
+  .btn.blue:active { box-shadow: 0 2px 0 #2a9cc4, 0 6px 12px rgba(76,201,240,.3); }
+  .btn.green { background: linear-gradient(180deg, #6ae8a3 0%, var(--green) 100%); box-shadow: 0 6px 0 #22a85f, 0 12px 24px rgba(61,220,132,.3); color: #0f3d24; }
+  .btn.green:active { box-shadow: 0 2px 0 #22a85f, 0 6px 12px rgba(61,220,132,.3); }
   .btn.outline {
-    background: transparent; color: var(--gold-bright);
-    border: 1px solid var(--gold-deep);
-    box-shadow: inset 0 0 0 1px rgba(199,145,54,.15);
+    background: var(--white); color: var(--ink);
+    border: 3px solid var(--ink);
+    box-shadow: 0 5px 0 var(--ink);
   }
+  .btn.outline:active { box-shadow: 0 1px 0 var(--ink); }
   .btn.ghost {
     background: transparent; border: none; color: var(--muted);
-    box-shadow: none; font-family: 'DM Sans', sans-serif;
-    font-size: 13px; letter-spacing: .04em;
-    text-transform: none; padding: 8px;
+    box-shadow: none; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 14px; padding: 10px;
   }
+  .btn.ghost:active { transform: none; }
 
   /* ====== HOME ====== */
   .home-btn {
     display: flex; align-items: center; gap: 14px;
-    padding: 16px 18px; margin-bottom: 10px;
-    background: linear-gradient(180deg, rgba(61,38,21,.7), rgba(26,13,5,.7));
-    border: 1px solid var(--gold-deep);
-    border-radius: 14px;
-    color: var(--gold-bright);
+    width: 100%; text-align: left;
+    padding: 18px;
+    margin-bottom: 14px;
+    background: var(--white);
+    border: 3px solid transparent;
+    border-radius: 24px;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0,0,0,.4), inset 0 1px 0 rgba(240,192,104,.12);
-    text-align: left;
+    box-shadow: var(--shadow);
+    transition: transform .08s, border-color .2s;
   }
-  .home-btn:active { transform: scale(.985); }
+  .home-btn:active { transform: scale(.98); }
+  .home-btn.pink  { border-color: var(--pink); }
+  .home-btn.blue  { border-color: var(--blue); }
   .home-btn-circle {
-    width: 48px; height: 48px; flex-shrink: 0;
+    width: 62px; height: 62px; flex-shrink: 0;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(240,192,104,.18) 0%, transparent 70%);
-    border: 2px solid var(--gold);
     display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,.08);
   }
+  .home-btn.pink .home-btn-circle { background: #ffe1e8; }
+  .home-btn.blue .home-btn-circle { background: #dbf4ff; }
   .home-btn-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px; letter-spacing: .12em; margin: 0; line-height: 1;
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 22px; line-height: 1.1; margin: 0; color: var(--ink);
   }
-  .home-btn-sub {
-    font-size: 11px; color: var(--muted);
-    letter-spacing: .04em; margin: 4px 0 0;
-  }
+  .home-btn-sub { font-size: 13px; color: var(--muted); margin: 3px 0 0; font-weight: 600; }
 
-  .rules {
-    margin-top: 14px; padding: 14px 16px;
-    background: rgba(0,0,0,.35);
-    border: 1px solid rgba(199,145,54,.25);
-    border-radius: 12px;
-  }
-  .rules-title {
-    font-family: 'Cinzel', serif; font-weight: 500;
-    letter-spacing: .3em; color: var(--gold-bright);
-    font-size: 10px; margin: 0 0 8px; text-align: center;
-  }
   .rule-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px dashed rgba(199,145,54,.2);
+    padding: 9px 0; border-bottom: 2px dashed #e8eef7;
   }
-  .rule-row:last-child { border: none; }
-  .rule-row .val { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--cream); font-size: 13px; }
-  .rule-row .min { font-family: 'Bebas Neue', sans-serif; color: var(--gold-bright); font-size: 18px; letter-spacing: .1em; }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-row .val { font-weight: 800; color: var(--ink); font-size: 15px; }
+  .rule-row .prize {
+    font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 18px;
+    color: var(--white); background: var(--red);
+    padding: 2px 12px; border-radius: 999px;
+    box-shadow: 0 3px 0 #c9304e;
+  }
+  .rule-row .prize.two { background: var(--purple); box-shadow: 0 3px 0 #7c5ad9; }
+  .rule-row .prize.time { background: var(--blue); box-shadow: 0 3px 0 #2a9cc4; font-size: 14px; }
+
+  .local {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 8px 0; border-bottom: 2px dashed #e8eef7;
+  }
+  .local:last-child { border-bottom: none; }
+  .local .pin { font-size: 20px; line-height: 1.2; }
+  .local .where { font-weight: 800; color: var(--ink); font-size: 14px; }
+  .local .shop { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .local .shop b { color: var(--red); }
+
+  .admin-link {
+    margin-top: auto; padding: 18px 0 4px;
+    text-align: center; background: none; border: none;
+    font-size: 10px; letter-spacing: .25em; text-transform: lowercase;
+    color: rgba(43,45,92,.3); cursor: pointer;
+  }
+  .admin-link:active { color: var(--ink); }
 
   /* ====== FORM ====== */
   .back {
-    background: transparent; border: none;
-    color: var(--muted); font-family: 'Cinzel', serif;
-    font-size: 11px; letter-spacing: .25em;
-    padding: 0 0 10px; cursor: pointer; text-align: left;
-    align-self: flex-start;
-  }
-  .field {
-    background: rgba(0,0,0,.35);
-    border: 1px solid rgba(199,145,54,.3);
-    border-radius: 12px; padding: 16px;
-    margin-bottom: 14px;
+    background: var(--white); border: none;
+    color: var(--ink); font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 14px; padding: 8px 14px; border-radius: 999px;
+    cursor: pointer; align-self: flex-start; margin-bottom: 14px;
+    box-shadow: 0 3px 0 rgba(43,45,92,.15);
   }
   .field-label {
-    font-family: 'Cinzel', serif;
-    letter-spacing: .25em; font-size: 10px;
-    color: var(--gold-bright); text-transform: uppercase;
-    margin-bottom: 8px; display: block;
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); display: block; margin-bottom: 8px; text-align: center;
   }
-  .input-money { display: flex; align-items: baseline; gap: 8px; }
-  .input-money .symbol {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; color: var(--gold-bright);
-  }
+  .input-money { display: flex; align-items: baseline; justify-content: center; gap: 8px; }
+  .input-money .symbol { font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 26px; color: var(--muted); }
   .input-money input {
-    flex: 1; background: transparent; border: none; outline: none;
-    color: var(--cream);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 38px; letter-spacing: .04em;
-    padding: 2px 0;
-    border-bottom: 2px solid rgba(199,145,54,.4);
-    transition: border-color .2s;
+    width: 60%; background: transparent; border: none; outline: none;
+    color: var(--ink); font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 52px; padding: 4px 0; text-align: center;
+    border-bottom: 4px solid #e8eef7; transition: border-color .2s;
   }
-  .input-money input:focus { border-color: var(--gold-bright); }
-
+  .input-money input:focus { border-color: var(--blue); }
   .error {
-    background: rgba(201,69,69,.15); color: var(--bad);
-    padding: 8px 12px; border: 1px solid rgba(201,69,69,.3);
-    border-radius: 8px; margin-top: 10px;
-    font-size: 12px; text-align: center;
+    background: #ffe4e4; color: var(--bad);
+    padding: 10px 14px; border-radius: 12px; margin-top: 12px;
+    font-size: 13px; font-weight: 700; text-align: center;
   }
 
-  /* ====== CARD DE CORTESIA ====== */
-  .cortesia-card {
-    position: relative;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(240,192,104,.12), transparent 60%),
-      linear-gradient(180deg, rgba(61,38,21,.85), rgba(26,13,5,.95));
-    border: 1px solid var(--gold);
-    border-radius: 18px;
-    padding: 18px 16px 16px;
-    margin-bottom: 12px;
-    overflow: hidden;
-    box-shadow:
-      0 14px 40px rgba(0,0,0,.6),
-      inset 0 1px 0 rgba(240,192,104,.2),
-      0 0 0 3px rgba(0,0,0,.4),
-      0 0 0 4px rgba(199,145,54,.4);
+  /* ====== CARD DO PRÊMIO ====== */
+  .premio-card {
+    position: relative; overflow: hidden;
+    background: var(--white);
+    border-radius: 28px;
+    padding: 22px 18px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 18px 44px rgba(43,45,92,.2);
+    border: 5px solid transparent;
+    background-image:
+      linear-gradient(var(--white), var(--white)),
+      linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
+    background-origin: border-box; background-clip: padding-box, border-box;
   }
-  .cortesia-card::before {
-    content: '';
-    position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
-    border: 1px solid rgba(199,145,54,.3);
-    border-radius: 12px;
-    pointer-events: none;
-  }
-
-  .headline {
-    text-align: center; line-height: 1;
-    margin: 4px 0 10px;
-  }
+  .headline { text-align: center; line-height: 1; }
   .headline .line-1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px; letter-spacing: .25em;
-    color: var(--cream); display: block; margin-bottom: 3px;
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 20px; color: var(--muted); display: block; letter-spacing: .08em;
+  }
+  .headline .big-num {
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 96px; line-height: .95; display: block;
+    background: linear-gradient(180deg, var(--red) 0%, var(--orange) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 0 rgba(43,45,92,.12));
   }
   .headline .line-2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px; letter-spacing: .14em;
-    color: var(--cream); display: block;
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 30px; color: var(--ink); display: block; margin-top: 2px;
   }
-  .headline .gratis {
-    font-family: 'Playfair Display', serif;
-    font-style: italic; font-weight: 700;
-    font-size: 64px; display: block; line-height: 1;
-    margin-top: -2px;
-    background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 60%, var(--gold-deep) 100%);
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,.6));
-  }
-  @media (max-width: 360px) {
-    .headline .gratis { font-size: 52px; }
-    .headline .line-2 { font-size: 22px; }
-  }
+  .illus { width: 190px; margin: 10px auto 6px; display: block; animation: popIn .7s cubic-bezier(.2,1.4,.4,1) both; }
+  @keyframes popIn { from { transform: scale(.4) rotate(-8deg); opacity: 0; } to { transform: none; opacity: 1; } }
 
-  /* ====== FOTO ====== */
-  .foto-wrap {
-    position: relative;
-    width: 100%; max-width: 220px;
-    margin: 4px auto 8px;
-    border-radius: 14px;
-    background: radial-gradient(ellipse at center top, #fffaf0, #f5e6c8 70%, #d4a04c 100%);
-    padding: 6px;
-    border: 1px solid var(--gold-bright);
-    box-shadow: 0 6px 18px rgba(0,0,0,.5), inset 0 0 12px rgba(199,145,54,.25);
-  }
-  .foto-cadeira {
-    width: 100%; height: auto; display: block;
-    border-radius: 10px;
-    mix-blend-mode: multiply;
-  }
-  .min-overlay {
-    position: absolute;
-    top: -10px; right: -10px;
-    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-    color: var(--wood-1);
-    padding: 8px 14px 6px;
-    border-radius: 999px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px; letter-spacing: .08em; line-height: 1;
-    border: 2px solid var(--wood-1);
-    box-shadow: 0 4px 12px rgba(0,0,0,.6);
-  }
-  .foto-fallback {
-    width: 100%; aspect-ratio: 1;
-    background: linear-gradient(180deg, #f5e6c8, #c79136);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif; font-size: 11px;
-    color: var(--wood-2); text-align: center; padding: 12px;
-    letter-spacing: .2em;
-  }
-
-  /* ====== QR ====== */
   .qr-frame {
-    margin: 8px auto 10px;
-    width: fit-content;
-    padding: 10px;
-    background: var(--cream);
-    border-radius: 10px;
-    border: 1px solid var(--gold-deep);
-    box-shadow: 0 4px 14px rgba(0,0,0,.5), inset 0 0 0 1px var(--gold-bright);
+    margin: 10px auto 12px; width: fit-content; padding: 12px;
+    background: var(--white); border-radius: 18px;
+    border: 4px dashed var(--blue);
   }
   .qr-frame img, .qr-frame canvas { display: block; }
 
-  /* ====== META ====== */
+  .onde { background: #f3f8ff; border-radius: 16px; padding: 12px 14px; margin-top: 4px; }
+  .onde .t { font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 13px; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; text-align: center; margin: 0 0 6px; }
+  .onde .local { padding: 5px 0; border-color: #e1ebfa; }
+  .onde .local .where { font-size: 13px; }
+  .onde .local .shop { font-size: 12px; }
+
   .meta-row {
-    display: flex; justify-content: space-around; gap: 8px;
-    margin-top: 10px; padding-top: 10px;
-    border-top: 1px dashed rgba(199,145,54,.3);
+    display: flex; justify-content: space-around; gap: 12px;
+    margin-top: 12px; padding-top: 12px; border-top: 2px dashed #e8eef7;
   }
   .meta-item { text-align: center; }
-  .meta-item .k {
-    font-family: 'Cinzel', serif;
-    font-size: 8px; letter-spacing: .3em;
-    color: var(--muted); text-transform: uppercase;
-  }
-  .meta-item .v {
-    font-family: 'Playfair Display', serif; font-weight: 700;
-    color: var(--cream); font-size: 13px; margin-top: 2px;
-  }
-
+  .meta-item .k { font-size: 10px; letter-spacing: .15em; color: var(--muted); font-weight: 800; text-transform: uppercase; }
+  .meta-item .v { font-family: 'Baloo 2', cursive; font-weight: 800; color: var(--ink); font-size: 17px; margin-top: 2px; }
   .footer-brand {
-    text-align: center; margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(199,145,54,.2);
-  }
-  .footer-brand .name {
-    font-family: 'Cinzel', serif; font-weight: 700;
-    letter-spacing: .4em; font-size: 10px;
-    color: var(--gold-bright);
+    text-align: center; margin-top: 12px; padding-top: 10px;
+    font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 11px;
+    letter-spacing: .12em; color: var(--muted); text-transform: uppercase;
   }
 
   /* ====== SCANNER ====== */
   .scanner-frame {
     width: 100%; aspect-ratio: 1;
-    background: #000; border-radius: 14px;
-    overflow: hidden; position: relative;
-    border: 1px solid var(--gold-deep);
-    box-shadow: 0 4px 14px rgba(0,0,0,.5);
+    background: #1b1d3a; border-radius: 24px; overflow: hidden; position: relative;
+    box-shadow: var(--shadow); border: 4px solid var(--white);
   }
   #reader { width: 100%; }
   #reader video { width: 100% !important; height: auto !important; }
   .scanner-corners { position: absolute; inset: 0; pointer-events: none; }
   .scanner-corners::before, .scanner-corners::after,
   .scanner-corners > span::before, .scanner-corners > span::after {
-    content: ''; position: absolute;
-    width: 24px; height: 24px;
-    border: 3px solid var(--gold-bright);
+    content: ''; position: absolute; width: 30px; height: 30px; border: 4px solid var(--yellow); border-radius: 6px;
   }
-  .scanner-corners::before { top: 14px; left: 14px; border-right: none; border-bottom: none; }
-  .scanner-corners::after  { top: 14px; right: 14px; border-left: none; border-bottom: none; }
-  .scanner-corners > span::before { bottom: 14px; left: 14px; border-right: none; border-top: none; }
-  .scanner-corners > span::after  { bottom: 14px; right: 14px; border-left: none; border-top: none; }
-
-  .scan-hint {
-    text-align: center; font-family: 'Cinzel', serif;
-    font-size: 10px; letter-spacing: .25em;
-    color: var(--muted); margin-top: 10px;
-  }
-
+  .scanner-corners::before { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+  .scanner-corners::after  { top: 16px; right: 16px; border-left: none; border-bottom: none; }
+  .scanner-corners > span::before { bottom: 16px; left: 16px; border-right: none; border-top: none; }
+  .scanner-corners > span::after  { bottom: 16px; right: 16px; border-left: none; border-top: none; }
   .cam-start {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 14px;
-    background: linear-gradient(180deg, rgba(61,38,21,.85), rgba(10,5,2,.95));
-    color: var(--gold-bright);
-    border: none; cursor: pointer;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px; letter-spacing: .14em;
-    z-index: 2;
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    background: linear-gradient(180deg, rgba(43,45,92,.75), rgba(27,29,58,.95));
+    color: var(--white); border: none; cursor: pointer;
+    font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 18px; letter-spacing: .04em;
   }
-  .cam-start .icon { font-size: 44px; line-height: 1; }
-  .cam-diag {
-    margin-top: 10px; min-height: 18px;
-    text-align: center; font-family: 'DM Sans', sans-serif;
-    font-size: 12px; color: var(--muted);
-    padding: 0 6px; line-height: 1.5;
-  }
+  .cam-start .icon { font-size: 46px; line-height: 1; }
+  .scan-hint { text-align: center; font-weight: 800; font-size: 12px; letter-spacing: .1em; color: var(--muted); margin-top: 12px; text-transform: uppercase; }
+  .cam-diag { margin-top: 8px; min-height: 18px; text-align: center; font-size: 12px; color: var(--muted); font-weight: 600; line-height: 1.5; }
   .cam-diag .err { color: var(--bad); }
 
+  /* ====== RESULTADO DA LEITURA ====== */
   .read-result {
-    text-align: center; padding: 20px 18px;
-    background: linear-gradient(180deg, rgba(61,38,21,.8), rgba(26,13,5,.9));
-    border-radius: 16px; border: 1px solid var(--gold);
-    margin-bottom: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    text-align: center; padding: 24px 18px;
+    background: var(--white); border-radius: 24px;
+    border: 4px solid var(--good); margin-bottom: 14px;
+    box-shadow: var(--shadow);
   }
-  .read-result.invalid { border-color: rgba(201,69,69,.6); }
-  .read-result .status {
-    font-family: 'Cinzel', serif; font-weight: 700;
-    letter-spacing: .35em; font-size: 10px;
-    color: var(--good); margin-bottom: 10px;
-  }
-  .read-result.invalid .status { color: var(--bad); }
+  .read-result .status { font-family: 'Baloo 2', cursive; font-weight: 800; letter-spacing: .06em; font-size: 15px; color: var(--good); margin-bottom: 8px; }
   .read-result .big {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 84px; line-height: 1;
-    background: linear-gradient(180deg, var(--gold-pale), var(--gold));
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 96px; line-height: .95;
+    background: linear-gradient(180deg, var(--red), var(--orange));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .read-result.invalid .big {
-    background: none; -webkit-text-fill-color: var(--bad); font-size: 28px;
-  }
-  .read-result.redeemed { border-color: rgba(240,160,80,.55); }
-  .read-result.redeemed .status { color: #f0a050; }
-  .read-result.redeemed .big {
-    background: linear-gradient(180deg, #d49860, #785030);
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .read-result .minlbl {
-    font-family: 'Cinzel', serif;
-    letter-spacing: .35em; font-size: 12px;
-    color: var(--cream); margin-bottom: 4px;
-  }
-  .read-result .sub {
-    font-family: 'Playfair Display', serif;
-    font-style: italic; color: var(--cream);
-    margin: 10px 0 6px; font-size: 14px;
-  }
-  .read-result .meta {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; color: var(--muted); margin: 3px 0;
-  }
-  .read-result .meta strong { color: var(--cream); font-weight: 500; }
+  .read-result .biglbl { font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 26px; color: var(--ink); margin-bottom: 4px; }
+  .read-result .sub { font-weight: 700; color: var(--muted); margin: 10px 0 6px; }
+  .read-result .meta { font-size: 13px; color: var(--muted); margin: 3px 0; font-weight: 600; }
+  .read-result .meta strong { color: var(--ink); }
+  .read-result.invalid { border-color: var(--bad); }
+  .read-result.invalid .status { color: var(--bad); }
+  .read-result.invalid .big { background: none; -webkit-text-fill-color: var(--bad); font-size: 30px; }
+  .read-result.redeemed { border-color: var(--warn); }
+  .read-result.redeemed .status { color: var(--warn); }
+  .read-result.redeemed .big { background: linear-gradient(180deg, #fbbf24, #d97706); -webkit-background-clip: text; background-clip: text; }
 
-  /* ====== ADMIN LINK (discreto no rodapé) ====== */
-  .admin-link {
-    margin-top: auto;
-    padding: 20px 0 6px;
-    text-align: center;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    letter-spacing: .25em;
-    color: rgba(160,124,74,.4);
-    text-decoration: none;
-    cursor: pointer;
-    background: none;
-    border: none;
-    text-transform: lowercase;
-    transition: color .2s;
-  }
-  .admin-link:hover, .admin-link:active { color: var(--gold-bright); }
-
-  /* ====== MODAL PIN ====== */
-  .modal {
-    position: fixed; inset: 0;
-    z-index: 100;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-  }
-  .modal-bg {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,.75);
-    backdrop-filter: blur(4px);
-  }
-  .modal-card {
-    position: relative;
-    background: linear-gradient(180deg, rgba(61,38,21,.95), rgba(26,13,5,.98));
-    border: 1px solid var(--gold);
-    border-radius: 18px;
-    padding: 28px 22px 22px;
-    width: 100%; max-width: 320px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.8), inset 0 1px 0 rgba(240,192,104,.2);
-  }
-  .modal-title {
-    font-family: 'Cinzel', serif; font-weight: 700;
-    letter-spacing: .25em; font-size: 12px;
-    color: var(--gold-bright);
-    margin: 0 0 16px; text-align: center;
-  }
-  .pin-input {
-    width: 100%;
-    background: rgba(0,0,0,.4);
-    border: 1px solid rgba(199,145,54,.4);
-    border-radius: 10px;
-    padding: 14px;
-    color: var(--cream);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px; letter-spacing: .6em; text-align: center;
-    margin-bottom: 14px;
-    outline: none;
-  }
-  .pin-input:focus { border-color: var(--gold-bright); }
-
-  /* ====== ADMIN HOME ====== */
-  .admin-header {
-    text-align: center;
-    margin-bottom: 18px;
-  }
+  /* ====== ADMIN ====== */
   .admin-badge {
-    display: inline-block;
-    font-family: 'Cinzel', serif; font-weight: 700;
-    letter-spacing: .35em; font-size: 11px;
-    color: var(--wood-1);
-    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-    padding: 6px 16px;
-    border-radius: 999px;
-    margin: 0;
+    display: inline-block; font-family: 'Baloo 2', cursive; font-weight: 800;
+    letter-spacing: .08em; font-size: 13px; color: var(--white);
+    background: var(--ink); padding: 6px 16px; border-radius: 999px; margin: 0 0 16px;
   }
-
-  /* ====== BRINDE: botões 5/10 min ====== */
-  .brinde-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 8px;
-  }
+  .brinde-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .btn-brinde {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 28px 12px;
-    background: linear-gradient(180deg, rgba(61,38,21,.7), rgba(26,13,5,.7));
-    border: 1px solid var(--gold-deep);
-    border-radius: 16px;
-    color: var(--gold-bright);
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba(0,0,0,.5), inset 0 1px 0 rgba(240,192,104,.15);
-    transition: transform .08s, border-color .2s;
+    padding: 24px 12px; background: var(--white); border: 4px solid var(--pink);
+    border-radius: 24px; cursor: pointer; box-shadow: var(--shadow);
+    transition: transform .08s;
   }
-  .btn-brinde:active { transform: scale(.97); }
-  .btn-brinde:hover { border-color: var(--gold-bright); }
+  .btn-brinde:active { transform: scale(.96); }
+  .btn-brinde.two { border-color: var(--purple); }
   .btn-brinde .num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 64px; line-height: 1;
-    background: linear-gradient(180deg, var(--gold-pale), var(--gold));
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 64px; line-height: 1;
+    background: linear-gradient(180deg, var(--red), var(--orange));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .btn-brinde .lbl {
-    font-family: 'Cinzel', serif;
-    font-size: 11px; letter-spacing: .3em;
-    color: var(--cream); margin-top: 6px;
-  }
+  .btn-brinde.two .num { background: linear-gradient(180deg, var(--purple), #7c5ad9); -webkit-background-clip: text; background-clip: text; }
+  .btn-brinde .lbl { font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 14px; color: var(--ink); margin-top: 4px; }
 
-  /* ====== FIDELIDADE ====== */
-  .cartoes-list {
-    margin-top: 14px;
-    display: flex; flex-direction: column;
-    gap: 8px;
+  /* ====== MODAL PIN ====== */
+  .modal { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .modal-bg { position: absolute; inset: 0; background: rgba(43,45,92,.55); backdrop-filter: blur(4px); }
+  .modal-card { position: relative; background: var(--white); border-radius: 24px; padding: 24px 20px 18px; width: 100%; max-width: 320px; box-shadow: 0 20px 60px rgba(43,45,92,.4); }
+  .modal-title { font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 16px; letter-spacing: .06em; color: var(--ink); margin: 0 0 14px; text-align: center; }
+  .pin-input {
+    width: 100%; background: #f3f8ff; border: 3px solid #e1ebfa; border-radius: 14px;
+    padding: 12px; color: var(--ink); font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 34px; letter-spacing: .5em; text-align: center; margin-bottom: 10px; outline: none;
   }
-  .cartao-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 14px;
-    background: rgba(0,0,0,.35);
-    border: 1px solid rgba(199,145,54,.25);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: border-color .2s;
-  }
-  .cartao-item:hover { border-color: var(--gold); }
-  .cartao-item .seal-count {
-    width: 44px; height: 44px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(240,192,104,.2), transparent 70%);
-    border: 2px solid var(--gold);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px; color: var(--gold-bright);
-  }
-  .cartao-item .cartao-info {
-    flex: 1; min-width: 0;
-  }
-  .cartao-item .cartao-nome {
-    font-family: 'Playfair Display', serif; font-weight: 700;
-    color: var(--cream); font-size: 15px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .cartao-item .cartao-meta {
-    font-size: 11px; color: var(--muted);
-    margin-top: 2px;
-  }
-  .cartao-item.premio { border-color: var(--gold-bright); background: rgba(240,192,104,.08); }
-  .cartao-item.premio .cartao-meta { color: var(--gold-bright); }
-
-  .seal-bar {
-    display: flex; gap: 4px;
-    justify-content: center;
-    margin: 14px 0;
-    flex-wrap: wrap;
-  }
-  .seal {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: rgba(0,0,0,.4);
-    border: 2px dashed rgba(199,145,54,.3);
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(199,145,54,.3);
-    font-size: 13px;
-    transition: all .3s;
-  }
-  @media (max-width: 380px) {
-    .seal { width: 26px; height: 26px; font-size: 12px; }
-    .seal-bar { gap: 3px; }
-  }
-  .seal.filled {
-    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-    border-color: var(--gold-bright);
-    color: var(--wood-1);
-    box-shadow: 0 2px 8px rgba(240,192,104,.4);
-  }
-  .seal.filled.new { animation: pop .5s ease-out; }
-  @keyframes pop {
-    0% { transform: scale(0); }
-    60% { transform: scale(1.25); }
-    100% { transform: scale(1); }
-  }
-
-  .premio-banner {
-    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-    color: var(--wood-1);
-    padding: 14px;
-    border-radius: 12px;
-    text-align: center;
-    margin: 14px 0;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px; letter-spacing: .12em;
-    box-shadow: 0 6px 20px rgba(240,192,104,.4);
-  }
-  .premio-banner .small {
-    display: block;
-    font-family: 'Cinzel', serif; font-weight: 700;
-    font-size: 10px; letter-spacing: .3em;
-    margin-bottom: 4px;
-  }
-
-  /* ====== Textarea / Anotações ====== */
-  .field-textarea {
-    width: 100%;
-    background: rgba(0,0,0,.4);
-    border: 1px solid rgba(199,145,54,.3);
-    border-radius: 10px;
-    padding: 10px 12px;
-    color: var(--cream);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.4;
-    outline: none;
-    resize: vertical;
-    min-height: 60px;
-    transition: border-color .2s;
-  }
-  .field-textarea:focus { border-color: var(--gold-bright); }
-  .field-input {
-    width: 100%;
-    padding: 14px 16px;
-    background: rgba(0,0,0,.4);
-    border: 1px solid rgba(199,145,54,.4);
-    border-radius: 10px;
-    color: var(--cream);
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    outline: none;
-    transition: border-color .2s;
-  }
-  .field-input:focus { border-color: var(--gold-bright); }
-  .notas-wrap {
-    margin: 14px 0 6px;
-  }
-  .notas-wrap label {
-    font-family: 'Cinzel', serif;
-    letter-spacing: .3em;
-    font-size: 10px;
-    color: var(--gold-bright);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 6px;
-    text-align: center;
-  }
-  .notas-saved {
-    font-size: 11px;
-    color: var(--good);
-    margin-top: 4px;
-    text-align: center;
-  }
-
-  /* ====== Histórico ====== */
-  .historico {
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px dashed rgba(199,145,54,.2);
-  }
-  .historico h3 {
-    font-family: 'Cinzel', serif;
-    letter-spacing: .3em;
-    font-size: 10px;
-    color: var(--gold-bright);
-    text-transform: uppercase;
-    margin: 0 0 10px;
-    text-align: center;
-  }
-  .historico-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 220px;
-    overflow-y: auto;
-  }
-  .historico-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 7px 4px;
-    border-bottom: 1px dashed rgba(199,145,54,.15);
-    font-size: 12px;
-  }
-  .historico-item:last-child { border-bottom: none; }
-  .historico-item .ev {
-    color: var(--cream);
-    font-family: 'DM Sans', sans-serif;
-  }
-  .historico-item .ev.premio {
-    color: var(--gold-bright);
-    font-weight: 700;
-  }
-  .historico-item .when {
-    color: var(--muted);
-    font-size: 11px;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .historico-empty {
-    text-align: center;
-    color: var(--muted);
-    font-size: 12px;
-    padding: 10px 0;
-    font-style: italic;
-    list-style: none;
-  }
-
-  /* ====== Notas no card de leitura ====== */
-  .card-notas {
-    margin-top: 14px;
-    padding: 12px 14px;
-    background: rgba(240,192,104,.1);
-    border-left: 3px solid var(--gold-bright);
-    border-radius: 6px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    color: var(--cream);
-    font-style: italic;
-    line-height: 1.4;
-    text-align: left;
-  }
-  .card-notas .lbl {
-    font-family: 'Cinzel', serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 9px;
-    letter-spacing: .35em;
-    color: var(--gold-bright);
-    display: block;
-    margin-bottom: 4px;
-  }
+  .pin-input:focus { border-color: var(--blue); }
 </style>
 </head>
 <body>
 
-<svg class="palm left" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="palmGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3a2410"/>
-      <stop offset="100%" stop-color="#1a0d05"/>
-    </linearGradient>
-  </defs>
-  <path fill="url(#palmGrad)" d="M95 360 Q92 240 88 180 Q86 140 90 110 L97 110 Q101 140 99 180 Q96 240 105 360 Z"/>
-  <g fill="#2a1a0c" opacity=".95">
-    <path d="M90 110 Q40 90 0 100 Q30 80 90 95 Z"/>
-    <path d="M90 105 Q50 70 5 60 Q40 65 92 95 Z"/>
-    <path d="M92 100 Q120 70 180 65 Q140 80 95 100 Z"/>
-    <path d="M93 95 Q130 50 195 40 Q150 70 97 100 Z"/>
-    <path d="M91 108 Q60 130 10 145 Q50 120 92 105 Z"/>
-    <path d="M93 108 Q140 130 195 130 Q150 115 95 105 Z"/>
-    <path d="M92 95 Q88 60 80 20 Q95 50 95 95 Z"/>
-    <path d="M93 95 Q100 60 115 25 Q105 60 96 95 Z"/>
-  </g>
-</svg>
-<svg class="palm right" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
-  <path fill="url(#palmGrad)" d="M95 360 Q92 240 88 180 Q86 140 90 110 L97 110 Q101 140 99 180 Q96 240 105 360 Z"/>
-  <g fill="#2a1a0c" opacity=".95">
-    <path d="M90 110 Q40 90 0 100 Q30 80 90 95 Z"/>
-    <path d="M90 105 Q50 70 5 60 Q40 65 92 95 Z"/>
-    <path d="M92 100 Q120 70 180 65 Q140 80 95 100 Z"/>
-    <path d="M93 95 Q130 50 195 40 Q150 70 97 100 Z"/>
-    <path d="M91 108 Q60 130 10 145 Q50 120 92 105 Z"/>
-    <path d="M93 108 Q140 130 195 130 Q150 115 95 105 Z"/>
-    <path d="M92 95 Q88 60 80 20 Q95 50 95 95 Z"/>
-    <path d="M93 95 Q100 60 115 25 Q105 60 96 95 Z"/>
-  </g>
-</svg>
-
-<div class="sparkles" id="sparkles"></div>
+<div class="sky" id="sky"></div>
+<div class="confetti" id="confetti"></div>
 
 <div class="app">
   <header class="brand">
-    <svg class="crown" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
-      <defs>
-        <linearGradient id="crownGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#f8e3b3"/>
-          <stop offset="50%" stop-color="#f0c068"/>
-          <stop offset="100%" stop-color="#8a5a1f"/>
-        </linearGradient>
-      </defs>
-      <path d="M8 22 L18 38 L24 18 L32 36 L40 18 L46 38 L56 22 L52 48 L12 48 Z"
-            fill="url(#crownGrad)" stroke="#8a5a1f" stroke-width="1.2" stroke-linejoin="round"/>
-      <circle cx="8" cy="20" r="3" fill="#f0c068" stroke="#8a5a1f"/>
-      <circle cx="56" cy="20" r="3" fill="#f0c068" stroke="#8a5a1f"/>
-      <circle cx="32" cy="14" r="3" fill="#f0c068" stroke="#8a5a1f"/>
-      <rect x="12" y="50" width="40" height="4" fill="#c79136" stroke="#8a5a1f"/>
+    <svg class="brand-logo" viewBox="0 0 72 84" xmlns="http://www.w3.org/2000/svg">
+      <path d="M36 62 Q34 72 30 82" stroke="#2b2d5c" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="36" cy="32" rx="26" ry="31" fill="#ff4d6d"/>
+      <ellipse cx="26" cy="20" rx="7" ry="11" fill="#fff" opacity=".45" transform="rotate(-20 26 20)"/>
+      <path d="M36 63 l-5 7 h10 z" fill="#ff4d6d"/>
+      <circle cx="60" cy="14" r="4" fill="#ffd23f"/>
+      <circle cx="10" cy="48" r="3" fill="#4cc9f0"/>
+      <circle cx="64" cy="48" r="3" fill="#3ddc84"/>
+      <circle cx="8" cy="14" r="2.5" fill="#b388ff"/>
     </svg>
-    <p class="brand-title">TRONO DA MASSAGEM</p>
+    <h1 class="brand-title">BALÃO PREMIADO</h1>
+    <p class="brand-sub">🎉 Dia das Crianças</p>
   </header>
 
   <!-- ====== HOME ====== -->
   <section id="home" class="screen active">
-    <button class="home-btn" onclick="show('gerar')">
-      <div class="home-btn-circle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <rect x="3" y="8" width="18" height="13" rx="2"/>
-          <path d="M8 8V5a4 4 0 0 1 8 0v3"/>
-          <path d="M12 12v4"/><path d="M10 14h4"/>
-        </svg>
-      </div>
+    <button class="home-btn pink" onclick="show('gerar')">
+      <div class="home-btn-circle">🎈</div>
       <div>
-        <h2 class="home-btn-title">GERAR CORTESIA</h2>
-        <p class="home-btn-sub">Para a funcionária da loja</p>
+        <h2 class="home-btn-title">Gerar Cortesia</h2>
+        <p class="home-btn-sub">Funcionária digita o valor da compra</p>
+      </div>
+    </button>
+    <button class="home-btn blue" onclick="show('ler')">
+      <div class="home-btn-circle">📷</div>
+      <div>
+        <h2 class="home-btn-title">Ler QR Code</h2>
+        <p class="home-btn-sub">Na loja dos balões, antes de estourar</p>
       </div>
     </button>
 
-    <button class="home-btn" onclick="show('ler')">
-      <div class="home-btn-circle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-          <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-          <rect x="7" y="7" width="10" height="10" rx="1"/>
-        </svg>
-      </div>
-      <div>
-        <h2 class="home-btn-title">LER QR CODE</h2>
-        <p class="home-btn-sub">Para a poltrona de massagem</p>
-      </div>
-    </button>
+    <div class="card">
+      <p class="card-title">Como funciona</p>
+      <div class="rule-row"><span class="val">Compra ≥ R$ 100</span><span class="prize">🎈 1 balão</span></div>
+      <div class="rule-row"><span class="val">Compra ≥ R$ 200</span><span class="prize two">🎈🎈 2 balões</span></div>
+      <div class="rule-row"><span class="val" style="color:var(--muted)">Validade do QR</span><span class="prize time">24 horas</span></div>
+    </div>
 
-    <div class="rules">
-      <p class="rules-title">REGRAS DA CORTESIA</p>
-      <div class="rule-row"><span class="val">Compra ≥ R$ 100</span><span class="min">5 MIN</span></div>
-      <div class="rule-row"><span class="val">Compra ≥ R$ 200</span><span class="min">10 MIN</span></div>
-      <div class="rule-row"><span class="val" style="font-size:12px; color:var(--muted);">Validade do QR</span><span class="min" style="font-size:13px;">24 H</span></div>
+    <div class="card">
+      <p class="card-title">Onde estourar o balão</p>
+      <div class="local"><span class="pin">📍</span><div><div class="where">Centro Comercial da Onda</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
+      <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Praia do Morro</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
+      <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Mar</div><div class="shop">Nova loja <b>Reizinho Brinquedos</b></div></div></div>
     </div>
 
     <button class="admin-link" onclick="abrirPin()">🔐 admin</button>
@@ -890,10 +475,10 @@
 
   <!-- ====== GERAR ====== -->
   <section id="gerar" class="screen">
-    <button class="back" onclick="show('home')">← VOLTAR</button>
+    <button class="back" onclick="show('home')">← Voltar</button>
 
     <div id="gerar-form">
-      <div class="field">
+      <div class="card">
         <label class="field-label" for="valor">Valor da compra</label>
         <div class="input-money">
           <span class="symbol">R$</span>
@@ -901,40 +486,71 @@
         </div>
         <div id="gerar-erro"></div>
       </div>
-      <button class="btn" onclick="gerarQR()">Gerar QR Code</button>
+      <button class="btn" onclick="gerarQR()">🎈 Gerar QR Code</button>
+      <p style="text-align:center; color:var(--muted); font-size:13px; font-weight:600; margin-top:6px; line-height:1.5;">
+        A cliente fotografa o QR Code e mostra<br>na loja dos balões pra estourar o dela.
+      </p>
     </div>
 
     <div id="gerar-resultado" style="display:none;">
-      <article class="cortesia-card">
+      <article class="premio-card">
         <div class="headline">
           <span class="line-1">VOCÊ GANHOU</span>
-          <span class="line-2">UMA MASSAGEM</span>
-          <span class="gratis">Grátis</span>
+          <span class="big-num" id="g-b">1</span>
+          <span class="line-2" id="g-b-lbl">BALÃO PREMIADO!</span>
         </div>
 
-        <div class="foto-wrap">
-          <img src="cadeira.png" class="foto-cadeira" alt="Cadeira de massagem"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="foto-fallback" style="display:none;">SALVE<br>cadeira.png<br>NA PASTA</div>
-          <span class="min-overlay"><span id="g-min">5</span> MIN</span>
-        </div>
+        <svg class="illus" viewBox="0 0 240 250" xmlns="http://www.w3.org/2000/svg">
+          <!-- fios -->
+          <g stroke="#2b2d5c" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7">
+            <path d="M60 150 Q90 190 120 232"/>
+            <path d="M180 150 Q150 190 120 232"/>
+            <path d="M120 170 Q122 200 120 232"/>
+            <path d="M92 120 Q108 180 120 232"/>
+            <path d="M150 120 Q134 180 120 232"/>
+          </g>
+          <!-- balões de trás -->
+          <ellipse cx="92" cy="72" rx="30" ry="36" fill="#3ddc84"/>
+          <path d="M92 108 l-5 7 h10 z" fill="#3ddc84"/>
+          <ellipse cx="150" cy="72" rx="30" ry="36" fill="#b388ff"/>
+          <path d="M150 108 l-5 7 h10 z" fill="#b388ff"/>
+          <!-- laterais -->
+          <ellipse cx="60" cy="108" rx="32" ry="38" fill="#ffd23f"/>
+          <path d="M60 146 l-5 7 h10 z" fill="#ffd23f"/>
+          <ellipse cx="50" cy="94" rx="8" ry="13" fill="#fff" opacity=".5" transform="rotate(-20 50 94)"/>
+          <ellipse cx="180" cy="108" rx="32" ry="38" fill="#4cc9f0"/>
+          <path d="M180 146 l-5 7 h10 z" fill="#4cc9f0"/>
+          <ellipse cx="170" cy="94" rx="8" ry="13" fill="#fff" opacity=".5" transform="rotate(-20 170 94)"/>
+          <!-- balão da frente -->
+          <ellipse cx="120" cy="120" rx="40" ry="48" fill="#ff4d6d"/>
+          <path d="M120 168 l-6 8 h12 z" fill="#ff4d6d"/>
+          <ellipse cx="106" cy="100" rx="10" ry="17" fill="#fff" opacity=".5" transform="rotate(-20 106 100)"/>
+          <!-- laço -->
+          <circle cx="120" cy="232" r="5" fill="#ff9f1c"/>
+          <!-- confete -->
+          <rect x="20" y="30" width="8" height="12" rx="2" fill="#ff9f1c" transform="rotate(20 24 36)"/>
+          <rect x="208" y="40" width="8" height="12" rx="2" fill="#3ddc84" transform="rotate(-30 212 46)"/>
+          <rect x="30" y="200" width="8" height="12" rx="2" fill="#4cc9f0" transform="rotate(45 34 206)"/>
+          <rect x="200" y="196" width="8" height="12" rx="2" fill="#ff4d6d" transform="rotate(-15 204 202)"/>
+          <circle cx="120" cy="22" r="4" fill="#ffd23f"/>
+          <circle cx="36" cy="60" r="3" fill="#b388ff"/>
+          <circle cx="206" cy="90" r="3" fill="#ff9f1c"/>
+        </svg>
 
-        <div class="qr-frame">
-          <div id="qrcode"></div>
+        <div class="qr-frame"><div id="qrcode"></div></div>
+
+        <div class="onde">
+          <p class="t">Vá estourar em uma dessas lojas</p>
+          <div class="local"><span class="pin">📍</span><div><div class="where">Centro Comercial da Onda</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
+          <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Praia do Morro</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
+          <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Mar</div><div class="shop">Nova loja <b>Reizinho Brinquedos</b></div></div></div>
         </div>
 
         <div class="meta-row">
-          <div class="meta-item">
-            <div class="k">Compra</div>
-            <div class="v" id="g-valor">R$ 100,00</div>
-          </div>
-          <div class="meta-item">
-            <div class="k">Válido até</div>
-            <div class="v" id="g-validade">—</div>
-          </div>
+          <div class="meta-item"><div class="k">Compra</div><div class="v" id="g-valor">R$ 100,00</div></div>
+          <div class="meta-item"><div class="k">Válido até</div><div class="v" id="g-validade">—</div></div>
         </div>
-
-        <div class="footer-brand"><span class="name">TRONO DA MASSAGEM</span></div>
+        <div class="footer-brand">Dia das Crianças · Princesinha Shop · Reizinho Brinquedos</div>
       </article>
 
       <button class="btn outline" onclick="novaCortesia()">Nova Cortesia</button>
@@ -944,7 +560,7 @@
 
   <!-- ====== LER ====== -->
   <section id="ler" class="screen">
-    <button class="back" onclick="parar('home')">← VOLTAR</button>
+    <button class="back" onclick="parar('home')">← Voltar</button>
 
     <div id="ler-scanner">
       <div class="scanner-frame">
@@ -955,7 +571,7 @@
           <span>TOCAR PARA<br>INICIAR CÂMERA</span>
         </button>
       </div>
-      <p class="scan-hint">APONTE A CÂMERA PARA O QR CODE</p>
+      <p class="scan-hint">Aponte a câmera para o QR Code</p>
       <div id="cam-diag" class="cam-diag"></div>
     </div>
 
@@ -963,194 +579,70 @@
       <div id="resultado-card" class="read-result">
         <div class="status"></div>
         <div class="big"></div>
-        <div class="minlbl"></div>
+        <div class="biglbl"></div>
         <div class="sub"></div>
         <div class="meta"></div>
         <div class="meta"></div>
-        <div class="card-notas" style="display:none;"></div>
       </div>
-      <button id="btn-resgatar" class="btn" onclick="confirmarResgate()" style="display:none;">✓ Resgatar Cortesia</button>
-      <button id="btn-carimbar-5" class="btn" onclick="carimbarCartao(1)" style="display:none;">+ 1 SELO (5 min pagos)</button>
-      <button id="btn-carimbar-10" class="btn" onclick="carimbarCartao(2)" style="display:none;">+ 2 SELOS (10 min pagos)</button>
-      <button id="btn-resgatar-premio" class="btn" onclick="resgatarPremio()" style="display:none;">🎁 Resgatar Prêmio (15 min)</button>
-      <button class="btn outline" onclick="lerOutra()">Ler Outra</button>
+      <button id="btn-resgatar" class="btn green" onclick="confirmarResgate()" style="display:none;">✓ Estourou! Marcar como usado</button>
+      <button class="btn blue" onclick="lerOutra()">Ler Outro</button>
       <button class="btn ghost" onclick="parar('home')">Voltar ao início</button>
     </div>
   </section>
 
-  <!-- ====== ADMIN HOME ====== -->
+  <!-- ====== ADMIN ====== -->
   <section id="admin" class="screen">
-    <button class="back" onclick="show('home')">← VOLTAR</button>
-    <header class="admin-header">
-      <p class="admin-badge">🔐 ÁREA ADMIN</p>
-    </header>
+    <button class="back" onclick="show('home')">← Voltar</button>
+    <div style="text-align:center;"><p class="admin-badge">🔐 ÁREA ADMIN</p></div>
 
-    <button class="home-btn" onclick="show('brinde')">
-      <div class="home-btn-circle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <rect x="3" y="8" width="18" height="13" rx="2"/>
-          <path d="M12 8v13"/><path d="M19 12H5"/>
-          <path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>
-        </svg>
-      </div>
+    <button class="home-btn pink" onclick="show('brinde')">
+      <div class="home-btn-circle">🎁</div>
       <div>
-        <h2 class="home-btn-title">BRINDE EXPRESSO</h2>
-        <p class="home-btn-sub">Cortesia sem precisar de valor</p>
+        <h2 class="home-btn-title">Brinde Expresso</h2>
+        <p class="home-btn-sub">Liberar balão sem precisar de compra</p>
       </div>
     </button>
 
-    <button class="home-btn" onclick="show('fidelidade')">
-      <div class="home-btn-circle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9"/>
-        </svg>
-      </div>
-      <div>
-        <h2 class="home-btn-title">FIDELIDADE</h2>
-        <p class="home-btn-sub">Cartões de selos dos clientes</p>
-      </div>
-    </button>
-
-    <button class="admin-link" onclick="lockAdmin()" style="margin-top:auto;">🔒 bloquear admin agora</button>
+    <button class="admin-link" onclick="lockAdmin()">🔒 bloquear admin agora</button>
   </section>
 
   <!-- ====== BRINDE ====== -->
   <section id="brinde" class="screen">
-    <button class="back" onclick="show('admin')">← VOLTAR</button>
+    <button class="back" onclick="show('admin')">← Voltar</button>
 
     <div id="brinde-form">
-      <p style="text-align:center; font-family:'Cinzel',serif; letter-spacing:.25em; font-size:11px; color:var(--gold-bright); margin: 8px 0 16px;">
-        SELECIONE O TEMPO DO BRINDE
-      </p>
+      <p class="field-label">Quantos balões?</p>
       <div class="brinde-grid">
-        <button class="btn-brinde" onclick="gerarBrinde(5)">
-          <span class="num">5</span>
-          <span class="lbl">MINUTOS</span>
-        </button>
-        <button class="btn-brinde" onclick="gerarBrinde(10)">
-          <span class="num">10</span>
-          <span class="lbl">MINUTOS</span>
-        </button>
+        <button class="btn-brinde" onclick="gerarBrinde(1)"><span class="num">1</span><span class="lbl">🎈 BALÃO</span></button>
+        <button class="btn-brinde two" onclick="gerarBrinde(2)"><span class="num">2</span><span class="lbl">🎈🎈 BALÕES</span></button>
       </div>
-      <p style="text-align:center; color:var(--muted); font-size:12px; margin-top:18px; line-height:1.5;">
+      <p style="text-align:center; color:var(--muted); font-size:13px; font-weight:600; margin-top:16px; line-height:1.5;">
         Brinde liberado pelo admin.<br>Não exige valor de compra.
       </p>
     </div>
 
     <div id="brinde-resultado" style="display:none;">
-      <article class="cortesia-card">
+      <article class="premio-card">
         <div class="headline">
           <span class="line-1">VOCÊ GANHOU</span>
-          <span class="line-2">UMA MASSAGEM</span>
-          <span class="gratis">Grátis</span>
+          <span class="big-num" id="b-b">1</span>
+          <span class="line-2" id="b-b-lbl">BALÃO PREMIADO!</span>
         </div>
-
-        <div class="foto-wrap">
-          <img src="cadeira.png" class="foto-cadeira" alt="Cadeira de massagem"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="foto-fallback" style="display:none;">SALVE<br>cadeira.png<br>NA PASTA</div>
-          <span class="min-overlay"><span id="b-min">5</span> MIN</span>
+        <div class="qr-frame"><div id="qrcode-brinde"></div></div>
+        <div class="onde">
+          <p class="t">Vá estourar em uma dessas lojas</p>
+          <div class="local"><span class="pin">📍</span><div><div class="where">Centro Comercial da Onda</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
+          <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Praia do Morro</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
+          <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Mar</div><div class="shop">Nova loja <b>Reizinho Brinquedos</b></div></div></div>
         </div>
-
-        <div class="qr-frame">
-          <div id="qrcode-brinde"></div>
-        </div>
-
         <div class="meta-row">
-          <div class="meta-item">
-            <div class="k">Tipo</div>
-            <div class="v">🎁 BRINDE</div>
-          </div>
-          <div class="meta-item">
-            <div class="k">Válido até</div>
-            <div class="v" id="b-validade">—</div>
-          </div>
+          <div class="meta-item"><div class="k">Tipo</div><div class="v">🎁 BRINDE</div></div>
+          <div class="meta-item"><div class="k">Válido até</div><div class="v" id="b-validade">—</div></div>
         </div>
-
-        <div class="footer-brand"><span class="name">TRONO DA MASSAGEM</span></div>
+        <div class="footer-brand">Dia das Crianças · Princesinha Shop · Reizinho Brinquedos</div>
       </article>
-
       <button class="btn outline" onclick="show('brinde')">Novo Brinde</button>
       <button class="btn ghost" onclick="show('admin')">Voltar ao admin</button>
-    </div>
-  </section>
-
-  <!-- ====== FIDELIDADE ====== -->
-  <section id="fidelidade" class="screen">
-    <button class="back" onclick="voltarFidelidade()">← VOLTAR</button>
-
-    <!-- Menu principal: lista de cartões + ações -->
-    <div id="fid-menu">
-      <p style="text-align:center; font-family:'Cinzel',serif; letter-spacing:.25em; font-size:11px; color:var(--gold-bright); margin: 8px 0 4px;">
-        CARTÕES DE FIDELIDADE
-      </p>
-      <p style="text-align:center; color:var(--muted); font-size:11px; margin: 0 0 14px;">
-        5 selos = 15 min de massagem grátis
-      </p>
-
-      <button class="btn" onclick="abrirNovoCartao()">+ Novo Cartão</button>
-      <div id="cartoes-list" class="cartoes-list"></div>
-    </div>
-
-    <!-- Form de novo cartão / editar -->
-    <div id="fid-novo" style="display:none;">
-      <div class="field">
-        <label class="field-label" for="card-nome">Nome do cliente *</label>
-        <input type="text" id="card-nome" class="field-input" placeholder="Maria">
-      </div>
-      <div class="field">
-        <label class="field-label" for="card-tel">Telefone *</label>
-        <input type="tel" id="card-tel" class="field-input" placeholder="(27) 99999-9999"
-               inputmode="numeric" autocomplete="off">
-      </div>
-      <div class="field">
-        <label class="field-label" for="card-notas">Anotações (opcional)</label>
-        <textarea id="card-notas" class="field-textarea"
-                  placeholder="Ex: prefere intensidade média"></textarea>
-      </div>
-      <div id="card-erro"></div>
-      <button id="btn-criar-cartao" class="btn" onclick="criarCartao()">Criar Cartão</button>
-      <button class="btn ghost" onclick="voltarFidelidade()">Cancelar</button>
-    </div>
-
-    <!-- Card gerado: mostra QR pessoal pro cliente fotografar -->
-    <div id="fid-cartao" style="display:none;">
-      <article class="cortesia-card">
-        <div class="headline">
-          <span class="line-1">CARTÃO FIDELIDADE</span>
-          <span class="line-2" id="fid-nome" style="font-size:32px; margin-top:6px;">—</span>
-          <span id="fid-tel-display" style="display:block; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:13px; letter-spacing:.05em; margin-top:4px; font-style:normal;"></span>
-        </div>
-
-        <div class="seal-bar" id="fid-seals"></div>
-
-        <div class="qr-frame">
-          <div id="qrcode-fid"></div>
-        </div>
-
-        <p style="text-align:center; color:var(--muted); font-size:11px; margin: 10px 0 0; line-height:1.5;">
-          Cliente fotografa esse QR e mostra<br>a cada massagem pra ganhar 1 selo.
-        </p>
-
-        <div class="notas-wrap">
-          <label>Anotações</label>
-          <textarea id="fid-notas-input" class="field-textarea"
-                    placeholder="Preferências, observações…"
-                    onblur="salvarNotas()"></textarea>
-          <div id="fid-notas-saved" class="notas-saved" style="visibility:hidden;">✓ Salvo</div>
-        </div>
-
-        <div class="historico">
-          <h3>HISTÓRICO</h3>
-          <ul id="fid-historico-list" class="historico-list"></ul>
-          <p id="fid-stats" style="text-align:center; color:var(--muted); font-size:11px; margin: 10px 0 0;"></p>
-        </div>
-
-        <div class="footer-brand"><span class="name">TRONO DA MASSAGEM</span></div>
-      </article>
-      <button class="btn" onclick="editarCartaoAtual()">Editar Cartão</button>
-      <button class="btn outline" onclick="voltarFidelidade()">Voltar à lista</button>
-      <button class="btn ghost" onclick="excluirCartaoAtual()" style="color:var(--bad);">Excluir cartão</button>
     </div>
   </section>
 </div>
@@ -1159,12 +651,10 @@
 <div id="pin-modal" class="modal" style="display:none;">
   <div class="modal-bg" onclick="fecharPin()"></div>
   <div class="modal-card">
-    <p class="modal-title">PIN ADMINISTRADOR</p>
-    <input id="pin-input" type="tel" inputmode="numeric" pattern="[0-9]*"
-           maxlength="4" placeholder="••••" class="pin-input"
-           autocomplete="off">
-    <div id="pin-erro" style="font-size:12px; color:var(--bad); text-align:center; min-height:18px; margin-bottom:8px;"></div>
-    <button class="btn" onclick="verificarPin()">Entrar</button>
+    <p class="modal-title">🔐 PIN DO ADMIN</p>
+    <input id="pin-input" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="••••" class="pin-input" autocomplete="off">
+    <div id="pin-erro" style="font-size:13px; font-weight:700; color:var(--bad); text-align:center; min-height:18px; margin-bottom:8px;"></div>
+    <button class="btn blue" onclick="verificarPin()">Entrar</button>
     <button class="btn ghost" onclick="fecharPin()">Cancelar</button>
   </div>
 </div>
@@ -1191,29 +681,50 @@
   });
 </script>
 <script>
-  (function makeSparkles() {
-    const c = document.getElementById('sparkles');
-    for (let i = 0; i < 18; i++) {
-      const s = document.createElement('div');
-      s.className = 'spark';
-      s.style.left = Math.random() * 100 + 'vw';
-      s.style.animationDelay = (-Math.random() * 8) + 's, ' + (-Math.random() * 2.4) + 's';
-      s.style.animationDuration = (6 + Math.random() * 6) + 's, ' + (1.8 + Math.random() * 1.6) + 's';
-      const size = 2 + Math.random() * 3;
-      s.style.width = s.style.height = size + 'px';
-      c.appendChild(s);
+  /* ====== Balões flutuando no fundo ====== */
+  const CORES = ['#ff4d6d', '#ff9f1c', '#ffd23f', '#3ddc84', '#4cc9f0', '#b388ff', '#ff8fab'];
+  (function makeSky() {
+    const sky = document.getElementById('sky');
+    for (let i = 0; i < 12; i++) {
+      const b = document.createElement('div');
+      b.className = 'bg-balloon';
+      const size = 34 + Math.random() * 30;
+      b.style.width = size + 'px';
+      b.style.height = (size * 1.25) + 'px';
+      b.style.left = (Math.random() * 100) + 'vw';
+      b.style.background = CORES[i % CORES.length];
+      b.style.animationDuration = (14 + Math.random() * 12) + 's';
+      b.style.animationDelay = (-Math.random() * 20) + 's';
+      b.style.opacity = (0.55 + Math.random() * 0.35).toFixed(2);
+      sky.appendChild(b);
     }
   })();
+  function confete(qtd = 60) {
+    const c = document.getElementById('confetti');
+    for (let i = 0; i < qtd; i++) {
+      const p = document.createElement('i');
+      p.style.left = (Math.random() * 100) + 'vw';
+      p.style.background = CORES[Math.floor(Math.random() * CORES.length)];
+      p.style.animationDuration = (2.2 + Math.random() * 1.8) + 's';
+      p.style.animationDelay = (Math.random() * 0.6) + 's';
+      p.style.width = (6 + Math.random() * 6) + 'px';
+      p.style.height = (10 + Math.random() * 8) + 'px';
+      c.appendChild(p);
+      setTimeout(() => p.remove(), 4500);
+    }
+  }
 
+  /* ====== Navegação ====== */
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     if (id === 'ler') prepararScanner();
     if (id === 'gerar') resetGerarForm();
     if (id === 'brinde') resetBrinde();
-    if (id === 'fidelidade') showFidelidade();
+    window.scrollTo({ top: 0 });
   }
 
+  /* ====== Helpers ====== */
   function parseValor(str) {
     if (!str) return NaN;
     str = String(str).trim().replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
@@ -1221,406 +732,85 @@
   }
   function formatBRL(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
   function formatData(ts) {
-    const d = new Date(ts);
-    const pad = n => String(n).padStart(2, '0');
+    const d = new Date(ts); const pad = n => String(n).padStart(2, '0');
     return `${pad(d.getDate())}/${pad(d.getMonth()+1)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
-  function minutosPara(valor) {
-    if (valor >= 200) return 10;
-    if (valor >= 100) return 5;
+  function baloesPara(valor) {
+    if (valor >= 200) return 2;
+    if (valor >= 100) return 1;
     return 0;
   }
+  function labelBaloes(n) { return n === 1 ? 'BALÃO PREMIADO!' : 'BALÕES PREMIADOS!'; }
   function idCurto() { return Math.random().toString(36).slice(2, 8); }
+  const VALIDADE_MS = 24 * 3600 * 1000;
 
-  // ====== Resgates (localStorage) ======
-  const REDEEMED_KEY = 'cortesias_resgatadas';
+  /* ====== Resgates (localStorage) ====== */
+  const REDEEMED_KEY = 'baloes_resgatados';
   function getResgates() {
-    try { return JSON.parse(localStorage.getItem(REDEEMED_KEY)) || {}; }
-    catch { return {}; }
+    try { return JSON.parse(localStorage.getItem(REDEEMED_KEY)) || {}; } catch { return {}; }
   }
   function salvarResgates(map) {
-    // Limpa entradas com mais de 7 dias pra não inchar o storage
     const cutoff = Date.now() - 7*24*3600*1000;
     for (const k in map) { if (map[k].at < cutoff) delete map[k]; }
     localStorage.setItem(REDEEMED_KEY, JSON.stringify(map));
   }
   function buscarResgate(id) { return getResgates()[id]; }
   function marcarResgate(id, data) {
-    const r = getResgates();
-    r[id] = { at: Date.now(), m: data.m, v: data.v };
-    salvarResgates(r);
+    const r = getResgates(); r[id] = { at: Date.now(), b: data.b, v: data.v }; salvarResgates(r);
   }
   let cortesiaAtual = null;
 
-  // ====== ADMIN PIN ======
+  /* ====== ADMIN PIN (fica desbloqueado 24h) ====== */
   const ADMIN_PIN = '8110'; // <— TROQUE AQUI SE QUISER OUTRO PIN
   const ADMIN_UNLOCK_KEY = 'admin_unlocked_until';
-  const ADMIN_UNLOCK_MS = 24 * 60 * 60 * 1000; // 24 horas
-
-  function isAdminUnlocked() {
-    const until = parseInt(localStorage.getItem(ADMIN_UNLOCK_KEY) || '0', 10);
-    return until > Date.now();
-  }
-  function unlockAdmin() {
-    localStorage.setItem(ADMIN_UNLOCK_KEY, String(Date.now() + ADMIN_UNLOCK_MS));
-  }
-  function lockAdmin() {
-    localStorage.removeItem(ADMIN_UNLOCK_KEY);
-    show('home');
-  }
-
+  function isAdminUnlocked() { return parseInt(localStorage.getItem(ADMIN_UNLOCK_KEY) || '0', 10) > Date.now(); }
+  function unlockAdmin() { localStorage.setItem(ADMIN_UNLOCK_KEY, String(Date.now() + VALIDADE_MS)); }
+  function lockAdmin() { localStorage.removeItem(ADMIN_UNLOCK_KEY); show('home'); }
   function abrirPin() {
-    if (isAdminUnlocked()) {
-      show('admin');
-      return;
-    }
+    if (isAdminUnlocked()) { show('admin'); return; }
     document.getElementById('pin-input').value = '';
     document.getElementById('pin-erro').textContent = '';
     document.getElementById('pin-modal').style.display = 'flex';
     setTimeout(() => document.getElementById('pin-input').focus(), 100);
   }
-  function fecharPin() {
-    document.getElementById('pin-modal').style.display = 'none';
-  }
+  function fecharPin() { document.getElementById('pin-modal').style.display = 'none'; }
   function verificarPin() {
     const v = document.getElementById('pin-input').value;
-    if (v === ADMIN_PIN) {
-      unlockAdmin();
-      fecharPin();
-      show('admin');
-    } else {
-      document.getElementById('pin-erro').textContent = 'PIN incorreto';
-      document.getElementById('pin-input').value = '';
-    }
+    if (v === ADMIN_PIN) { unlockAdmin(); fecharPin(); show('admin'); }
+    else { document.getElementById('pin-erro').textContent = 'PIN incorreto'; document.getElementById('pin-input').value = ''; }
   }
   document.getElementById('pin-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') { e.preventDefault(); verificarPin(); }
   });
 
-  // ====== BRINDE EXPRESSO ======
-  function resetBrinde() {
-    document.getElementById('brinde-form').style.display = '';
-    document.getElementById('brinde-resultado').style.display = 'none';
-  }
-  function gerarBrinde(minutos) {
-    const ts = Date.now();
-    const id = idCurto();
-    const base = window.location.origin + window.location.pathname;
-    const payload = `${base}?v=0&m=${minutos}&t=${ts}&id=${id}&brinde=1`;
-
-    document.getElementById('qrcode-brinde').innerHTML = '';
-    new QRCode(document.getElementById('qrcode-brinde'), {
-      text: payload, width: 180, height: 180,
-      correctLevel: QRCode.CorrectLevel.M,
-      colorDark: '#1a0d05', colorLight: '#f5e6c8'
-    });
-    document.getElementById('b-min').textContent = minutos;
-    document.getElementById('b-validade').textContent = formatData(ts + 24*3600*1000);
-    document.getElementById('brinde-form').style.display = 'none';
-    document.getElementById('brinde-resultado').style.display = '';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ====== FIDELIDADE (cartões + selos) ======
-  const CARTOES_KEY = 'cartoes_fidelidade';
-  const SELOS_OBJETIVO = 10;
-  const PREMIO_MIN = 15;
-  // 5 min pago = 1 selo · 10 min pago = 2 selos · 10 selos = 15 min grátis
-
-  function getCartoes() {
-    try { return JSON.parse(localStorage.getItem(CARTOES_KEY)) || {}; }
-    catch { return {}; }
-  }
-  function salvarCartoes(map) { localStorage.setItem(CARTOES_KEY, JSON.stringify(map)); }
-  function getCartao(id) { return getCartoes()[id]; }
-  function salvarCartao(cartao) {
-    const c = getCartoes(); c[cartao.id] = cartao; salvarCartoes(c);
-  }
-  function excluirCartao(id) {
-    const c = getCartoes(); delete c[id]; salvarCartoes(c);
-  }
-  function escapeHTML(s) {
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-
-  let cartaoAtualId = null;
-  let cartaoLidoAtual = null;
-  let editandoCartaoId = null;
-
-  // Máscara de telefone brasileiro
-  function maskPhone(s) {
-    const d = String(s).replace(/\D/g, '').slice(0, 11);
-    if (d.length === 0) return '';
-    if (d.length <= 2) return `(${d}`;
-    if (d.length <= 6) return `(${d.slice(0,2)}) ${d.slice(2)}`;
-    if (d.length <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
-    return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
-  }
-  document.getElementById('card-tel').addEventListener('input', e => {
-    e.target.value = maskPhone(e.target.value);
-  });
-
-  function showFidelidade() {
-    document.getElementById('fid-menu').style.display = '';
-    document.getElementById('fid-novo').style.display = 'none';
-    document.getElementById('fid-cartao').style.display = 'none';
-    renderListaCartoes();
-  }
-  function voltarFidelidade() {
-    const novoVis = document.getElementById('fid-novo').style.display !== 'none';
-    const cartaoVis = document.getElementById('fid-cartao').style.display !== 'none';
-    if (novoVis || cartaoVis) {
-      showFidelidade();
-    } else {
-      show('admin');
-    }
-  }
-  function renderListaCartoes() {
-    const list = document.getElementById('cartoes-list');
-    const c = getCartoes();
-    const ids = Object.keys(c).sort((a, b) => (c[b].criadoEm || 0) - (c[a].criadoEm || 0));
-    if (ids.length === 0) {
-      list.innerHTML = '<p style="text-align:center; color:var(--muted); font-size:12px; padding:20px 0;">Nenhum cartão ainda.<br>Toque em "+ Novo Cartão" pra criar o primeiro.</p>';
-      return;
-    }
-    list.innerHTML = ids.map(id => {
-      const card = c[id];
-      const premio = card.selos >= SELOS_OBJETIVO;
-      const faltam = SELOS_OBJETIVO - card.selos;
-      const status = premio
-        ? '🎁 PRÊMIO LIBERADO'
-        : `Faltam ${faltam} selo${faltam === 1 ? '' : 's'}`;
-      const tel = card.telefone ? escapeHTML(card.telefone) + ' · ' : '';
-      return `
-        <div class="cartao-item ${premio ? 'premio' : ''}" onclick="abrirCartao('${id}')">
-          <div class="seal-count">${card.selos}/${SELOS_OBJETIVO}</div>
-          <div class="cartao-info">
-            <div class="cartao-nome">${escapeHTML(card.nome)}</div>
-            <div class="cartao-meta">${tel}${status}</div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-  function abrirNovoCartao() {
-    editandoCartaoId = null;
-    document.getElementById('fid-menu').style.display = 'none';
-    document.getElementById('fid-cartao').style.display = 'none';
-    document.getElementById('fid-novo').style.display = '';
-    document.getElementById('card-nome').value = '';
-    document.getElementById('card-tel').value = '';
-    document.getElementById('card-notas').value = '';
-    document.getElementById('card-erro').innerHTML = '';
-    document.getElementById('btn-criar-cartao').textContent = 'Criar Cartão';
-    setTimeout(() => document.getElementById('card-nome').focus(), 100);
-  }
-  function editarCartaoAtual() {
-    if (!cartaoAtualId) return;
-    const c = getCartao(cartaoAtualId);
-    if (!c) return;
-    editandoCartaoId = cartaoAtualId;
-    document.getElementById('fid-menu').style.display = 'none';
-    document.getElementById('fid-cartao').style.display = 'none';
-    document.getElementById('fid-novo').style.display = '';
-    document.getElementById('card-nome').value = c.nome || '';
-    document.getElementById('card-tel').value = c.telefone || '';
-    document.getElementById('card-notas').value = c.notas || '';
-    document.getElementById('card-erro').innerHTML = '';
-    document.getElementById('btn-criar-cartao').textContent = 'Salvar Alterações';
-    setTimeout(() => document.getElementById('card-nome').focus(), 100);
-  }
-  function criarCartao() {
-    const nome = document.getElementById('card-nome').value.trim();
-    const telefone = document.getElementById('card-tel').value.trim();
-    const notas = document.getElementById('card-notas').value.trim();
-    const erro = document.getElementById('card-erro');
-    erro.innerHTML = '';
-    if (!nome) {
-      erro.innerHTML = '<div class="error">Digite o nome do cliente.</div>';
-      return;
-    }
-    if (!telefone || telefone.replace(/\D/g,'').length < 10) {
-      erro.innerHTML = '<div class="error">Digite um telefone válido (DDD + número).</div>';
-      return;
-    }
-    if (editandoCartaoId) {
-      const c = getCartao(editandoCartaoId);
-      if (c) {
-        c.nome = nome; c.telefone = telefone; c.notas = notas;
-        salvarCartao(c);
-      }
-      const idToOpen = editandoCartaoId;
-      editandoCartaoId = null;
-      abrirCartao(idToOpen);
-    } else {
-      const id = idCurto();
-      const cartao = {
-        id, nome, telefone, notas,
-        selos: 0, criadoEm: Date.now(),
-        premiosResgatados: 0,
-        historico: []
-      };
-      salvarCartao(cartao);
-      abrirCartao(id);
-    }
-  }
-  function salvarNotas() {
-    if (!cartaoAtualId) return;
-    const c = getCartao(cartaoAtualId);
-    if (!c) return;
-    const novo = document.getElementById('fid-notas-input').value.trim();
-    if (novo === (c.notas || '')) return; // nada a salvar
-    c.notas = novo;
-    salvarCartao(c);
-    const flag = document.getElementById('fid-notas-saved');
-    flag.style.visibility = 'visible';
-    setTimeout(() => { flag.style.visibility = 'hidden'; }, 1500);
-  }
-  function abrirCartao(id) {
-    const card = getCartao(id);
-    if (!card) { voltarFidelidade(); return; }
-    // Backfill campos novos
-    card.telefone = card.telefone || '';
-    card.notas = card.notas || '';
-    card.historico = card.historico || [];
-    cartaoAtualId = id;
-
-    document.getElementById('fid-menu').style.display = 'none';
-    document.getElementById('fid-novo').style.display = 'none';
-    document.getElementById('fid-cartao').style.display = '';
-    document.getElementById('fid-nome').textContent = card.nome;
-    document.getElementById('fid-tel-display').textContent = card.telefone || '—';
-
-    // Renderiza selos
-    const seals = document.getElementById('fid-seals');
-    seals.innerHTML = '';
-    for (let i = 0; i < SELOS_OBJETIVO; i++) {
-      const seal = document.createElement('div');
-      seal.className = 'seal' + (i < card.selos ? ' filled' : '');
-      if (i < card.selos) {
-        seal.innerHTML = '<svg viewBox="0 0 24 20" width="18" height="15" fill="currentColor" style="display:block"><path d="M3 16 L21 16 L21 7 L17 11 L12 4 L7 11 L3 7 Z"/><circle cx="3" cy="5.4" r="1.5"/><circle cx="12" cy="2.4" r="1.7"/><circle cx="21" cy="5.4" r="1.5"/></svg>';
-      } else {
-        seal.textContent = i + 1;
-      }
-      seals.appendChild(seal);
-    }
-
-    // QR pessoal do cartão
-    const base = window.location.origin + window.location.pathname;
-    const payload = `${base}?card=1&id=${card.id}&n=${encodeURIComponent(card.nome)}`;
-    document.getElementById('qrcode-fid').innerHTML = '';
-    new QRCode(document.getElementById('qrcode-fid'), {
-      text: payload, width: 180, height: 180,
-      correctLevel: QRCode.CorrectLevel.M,
-      colorDark: '#1a0d05', colorLight: '#f5e6c8'
-    });
-
-    // Notas
-    document.getElementById('fid-notas-input').value = card.notas;
-    document.getElementById('fid-notas-saved').style.visibility = 'hidden';
-
-    // Histórico
-    const list = document.getElementById('fid-historico-list');
-    const hist = [...card.historico].reverse().slice(0, 15);
-    if (hist.length === 0) {
-      list.innerHTML = '<li class="historico-empty">Sem registros ainda.</li>';
-    } else {
-      list.innerHTML = hist.map(ev => {
-        let label;
-        if (ev.type === 'premio') label = '🎁 Prêmio resgatado';
-        else if (ev.qtd === 2) label = '+ 2 selos (10 min pagos)';
-        else label = '+ 1 selo (5 min pagos)';
-        return `
-          <li class="historico-item">
-            <span class="ev ${ev.type === 'premio' ? 'premio' : ''}">${label}</span>
-            <span class="when">${formatData(ev.at)}</span>
-          </li>
-        `;
-      }).join('');
-    }
-    const pr = card.premiosResgatados || 0;
-    const eventosSelo = card.historico.filter(e => e.type === 'selo');
-    const totSessoes = eventosSelo.length;
-    const totMinPagos = eventosSelo.reduce((s, e) => s + (e.min || (e.qtd === 2 ? 10 : 5)), 0);
-    document.getElementById('fid-stats').innerHTML =
-      `<strong style="color:var(--cream)">${totSessoes}</strong> sess${totSessoes === 1 ? 'ão' : 'ões'} (${totMinPagos} min pagos) · ` +
-      `<strong style="color:var(--gold-bright)">${pr}</strong> prêmio${pr === 1 ? '' : 's'}`;
-  }
-  function excluirCartaoAtual() {
-    if (!cartaoAtualId) return;
-    if (!confirm('Excluir este cartão? Os selos serão perdidos.')) return;
-    excluirCartao(cartaoAtualId);
-    cartaoAtualId = null;
-    voltarFidelidade();
-  }
-
-  // ====== Ações ao ler cartão na poltrona ======
-  function carimbarCartao(qtd) {
-    qtd = qtd === 2 ? 2 : 1;
-    if (!cartaoLidoAtual) return;
-    const c = getCartao(cartaoLidoAtual.id);
-    if (!c) return;
-    c.selos = Math.min((c.selos || 0) + qtd, SELOS_OBJETIVO);
-    c.ultimoSelo = Date.now();
-    c.historico = c.historico || [];
-    c.historico.push({ type: 'selo', at: Date.now(), qtd, min: qtd === 2 ? 10 : 5 });
-    salvarCartao(c);
-    cartaoLidoAtual = c;
-
-    const cardEl = document.getElementById('resultado-card');
-    cardEl.classList.remove('invalid', 'redeemed');
-    const $btn5 = document.getElementById('btn-carimbar-5');
-    const $btn10 = document.getElementById('btn-carimbar-10');
-    const $btnPremio = document.getElementById('btn-resgatar-premio');
-    if (c.selos >= SELOS_OBJETIVO) {
-      $btn5.style.display = 'none';
-      $btn10.style.display = 'none';
-      $btnPremio.style.display = '';
-      cardEl.querySelector('.status').textContent = '🎁 PRÊMIO LIBERADO';
-      cardEl.querySelector('.big').textContent = c.nome;
-      cardEl.querySelector('.minlbl').textContent = `${c.selos}/${SELOS_OBJETIVO} SELOS — ${PREMIO_MIN} MIN`;
-      cardEl.querySelector('.sub').textContent = `Massagem de ${PREMIO_MIN} minutos liberada!`;
-    } else {
-      cardEl.querySelector('.minlbl').textContent = `${c.selos}/${SELOS_OBJETIVO} SELOS`;
-      const faltam = SELOS_OBJETIVO - c.selos;
-      cardEl.querySelector('.sub').textContent = `Faltam ${faltam} selo${faltam === 1 ? '' : 's'} pra ganhar massagem.`;
-      const $metas = cardEl.querySelectorAll('.meta');
-      $metas[1].innerHTML = `Último selo: <strong>${formatData(c.ultimoSelo)}</strong>`;
-    }
-  }
-  function resgatarPremio() {
-    if (!cartaoLidoAtual) return;
-    const c = getCartao(cartaoLidoAtual.id);
-    if (!c) return;
-    c.selos = 0;
-    c.premiosResgatados = (c.premiosResgatados || 0) + 1;
-    c.ultimoPremio = Date.now();
-    c.historico = c.historico || [];
-    c.historico.push({ type: 'premio', at: Date.now() });
-    salvarCartao(c);
-    cartaoLidoAtual = c;
-
-    document.getElementById('btn-resgatar-premio').style.display = 'none';
-    const cardEl = document.getElementById('resultado-card');
-    cardEl.classList.add('redeemed');
-    cardEl.querySelector('.status').textContent = '✓ PRÊMIO RESGATADO';
-    cardEl.querySelector('.big').textContent = `${PREMIO_MIN}`;
-    cardEl.querySelector('.minlbl').textContent = `MIN ENTREGUES`;
-    cardEl.querySelector('.sub').textContent = 'Cartão zerado. Boa massagem!';
-    const $metas = cardEl.querySelectorAll('.meta');
-    $metas[0].innerHTML = `Cartão de <strong>${escapeHTML(c.nome)}</strong>`;
-    $metas[1].innerHTML = `${c.premiosResgatados} prêmio${c.premiosResgatados === 1 ? '' : 's'} no total`;
-  }
-
+  /* ====== Máscara de dinheiro ====== */
   const valorInput = document.getElementById('valor');
   valorInput.addEventListener('input', e => {
     let v = e.target.value.replace(/\D/g, '');
     if (!v) { e.target.value = ''; return; }
     v = (parseInt(v, 10) / 100).toFixed(2).replace('.', ',');
-    v = v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    e.target.value = v;
+    e.target.value = v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   });
+  valorInput.addEventListener('keydown', e => { if (e.key === 'Enter') gerarQR(); });
 
+  /* ====== QR helper ====== */
+  function desenharQR(elId, payload) {
+    const el = document.getElementById(elId);
+    el.innerHTML = '';
+    new QRCode(el, {
+      text: payload, width: 200, height: 200,
+      correctLevel: QRCode.CorrectLevel.M,
+      colorDark: '#2b2d5c', colorLight: '#ffffff'
+    });
+  }
+  const PROD_URL = 'https://rogeriorei10.github.io/cortesia-massagem/';
+  function baseURL() {
+    // Em produção usa a URL atual; aberto como arquivo local/preview, aponta pra produção
+    if (/^https?:$/.test(window.location.protocol)) return window.location.origin + window.location.pathname;
+    return PROD_URL;
+  }
+
+  /* ====== Gerar ====== */
   function resetGerarForm() {
     document.getElementById('gerar-form').style.display = '';
     document.getElementById('gerar-resultado').style.display = 'none';
@@ -1629,40 +819,45 @@
     setTimeout(() => valorInput.focus(), 200);
   }
   function novaCortesia() { resetGerarForm(); }
-
   function gerarQR() {
     const erro = document.getElementById('gerar-erro');
     erro.innerHTML = '';
     const valor = parseValor(valorInput.value);
-    if (!valor || isNaN(valor) || valor <= 0) {
-      erro.innerHTML = '<div class="error">Digite um valor válido.</div>';
-      return;
-    }
-    if (valor < 100) {
-      erro.innerHTML = `<div class="error">Valor mínimo R$ 100,00 — faltam ${formatBRL(100 - valor)}.</div>`;
-      return;
-    }
-    const minutos = minutosPara(valor);
+    if (!valor || isNaN(valor) || valor <= 0) { erro.innerHTML = '<div class="error">Digite um valor válido.</div>'; return; }
+    if (valor < 100) { erro.innerHTML = `<div class="error">Valor mínimo R$ 100,00 — faltam ${formatBRL(100 - valor)}.</div>`; return; }
+    const b = baloesPara(valor);
     const ts = Date.now();
-    const id = idCurto();
-    const base = window.location.origin + window.location.pathname;
-    const payload = `${base}?v=${valor.toFixed(2)}&m=${minutos}&t=${ts}&id=${id}`;
-
-    document.getElementById('qrcode').innerHTML = '';
-    new QRCode(document.getElementById('qrcode'), {
-      text: payload, width: 180, height: 180,
-      correctLevel: QRCode.CorrectLevel.M,
-      colorDark: '#1a0d05', colorLight: '#f5e6c8'
-    });
-    document.getElementById('g-min').textContent = minutos;
+    const payload = `${baseURL()}?v=${valor.toFixed(2)}&b=${b}&t=${ts}&id=${idCurto()}`;
+    desenharQR('qrcode', payload);
+    document.getElementById('g-b').textContent = b;
+    document.getElementById('g-b-lbl').textContent = labelBaloes(b);
     document.getElementById('g-valor').textContent = formatBRL(valor);
-    document.getElementById('g-validade').textContent = formatData(ts + 24*3600*1000);
-
+    document.getElementById('g-validade').textContent = formatData(ts + VALIDADE_MS);
     document.getElementById('gerar-form').style.display = 'none';
     document.getElementById('gerar-resultado').style.display = '';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    confete();
   }
 
+  /* ====== Brinde (admin) ====== */
+  function resetBrinde() {
+    document.getElementById('brinde-form').style.display = '';
+    document.getElementById('brinde-resultado').style.display = 'none';
+  }
+  function gerarBrinde(b) {
+    const ts = Date.now();
+    const payload = `${baseURL()}?v=0&b=${b}&t=${ts}&id=${idCurto()}&brinde=1`;
+    desenharQR('qrcode-brinde', payload);
+    document.getElementById('b-b').textContent = b;
+    document.getElementById('b-b-lbl').textContent = labelBaloes(b);
+    document.getElementById('b-validade').textContent = formatData(ts + VALIDADE_MS);
+    document.getElementById('brinde-form').style.display = 'none';
+    document.getElementById('brinde-resultado').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    confete();
+  }
+
+  /* ====== Scanner ====== */
   let scanner = null;
   function prepararScanner() {
     document.getElementById('ler-scanner').style.display = '';
@@ -1675,49 +870,32 @@
     const diag = document.getElementById('cam-diag');
     const btn  = document.getElementById('cam-start-btn');
     btn.style.display = 'none';
-    diag.innerHTML = 'Abrindo câmera…';
-
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       diag.innerHTML = '<span class="err">Este navegador não suporta câmera. Tente abrir no Chrome.</span>';
-      btn.style.display = '';
-      return;
+      btn.style.display = ''; return;
     }
     diag.innerHTML = 'Carregando leitor…';
     try { await qrLibReady; } catch {
       diag.innerHTML = '<span class="err">A biblioteca de leitura QR não carregou (sem internet?). Verifique a conexão e atualize.</span>';
-      btn.style.display = '';
-      return;
+      btn.style.display = ''; return;
     }
     diag.innerHTML = 'Abrindo câmera…';
-
-    // Limpa scanner anterior caso ainda esteja ativo
     if (scanner) {
       try { await scanner.stop(); } catch(e) {}
       try { scanner.clear(); } catch(e) {}
       scanner = null;
     }
     document.getElementById('reader').innerHTML = '';
-
     try {
       scanner = new Html5Qrcode("reader");
-      await scanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
-        onLeitura,
-        () => {}
-      );
+      await scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: { width: 220, height: 220 } }, onLeitura, () => {});
       diag.innerHTML = '';
     } catch (err) {
       let msg = String(err && (err.message || err.name || err) || 'Erro desconhecido');
-      if (/Permission|NotAllowed|denied/i.test(msg)) {
-        msg = 'Permissão de câmera negada. Toque no cadeado na barra de endereço → Permissões → Câmera → Permitir, depois atualize.';
-      } else if (/NotFound|NotFoundError/i.test(msg)) {
-        msg = 'Nenhuma câmera encontrada neste aparelho.';
-      } else if (/NotReadable|TrackStart/i.test(msg)) {
-        msg = 'Câmera está sendo usada por outro app. Feche os outros apps e tente de novo.';
-      } else if (/Overconstrained/i.test(msg)) {
-        msg = 'Câmera traseira não disponível — tente outra vez.';
-      }
+      if (/Permission|NotAllowed|denied/i.test(msg)) msg = 'Permissão de câmera negada. Toque no cadeado na barra de endereço → Permissões → Câmera → Permitir, depois atualize.';
+      else if (/NotFound/i.test(msg)) msg = 'Nenhuma câmera encontrada neste aparelho.';
+      else if (/NotReadable|TrackStart/i.test(msg)) msg = 'Câmera está sendo usada por outro app. Feche os outros apps e tente de novo.';
+      else if (/Overconstrained/i.test(msg)) msg = 'Câmera traseira não disponível — tente outra vez.';
       diag.innerHTML = `<span class="err">${msg}</span>`;
       btn.style.display = '';
       scanner = null;
@@ -1732,34 +910,26 @@
   function lerOutra() {
     document.getElementById('ler-resultado').style.display = 'none';
     document.getElementById('ler-scanner').style.display = '';
-    // A permissão já foi dada antes — abre câmera direto, sem precisar tocar de novo.
     iniciarScannerComToque();
   }
   function onLeitura(texto) {
-    // Para a câmera totalmente — fica mais leve e o "Ler outra" começa do zero
     if (scanner) {
-      scanner.stop().then(() => { try { scanner.clear(); } catch(e){} scanner = null; })
-        .catch(() => { scanner = null; });
+      scanner.stop().then(() => { try { scanner.clear(); } catch(e){} scanner = null; }).catch(() => { scanner = null; });
     }
     mostrarResultado(texto);
   }
   function parsePayload(texto) {
     try {
       let url;
-      try { url = new URL(texto); }
-      catch { url = new URL(texto, window.location.origin); }
-      const params = url.searchParams;
-
-      if (params.get('card') === '1') {
-        return { type: 'card', id: params.get('id') || '', nome: params.get('n') || '' };
-      }
-      const v = parseFloat(params.get('v'));
-      const m = parseInt(params.get('m'), 10);
-      const t = parseInt(params.get('t'), 10);
-      const id = params.get('id') || '';
-      const brinde = params.get('brinde') === '1';
-      if (isNaN(v) || isNaN(m) || isNaN(t)) return null;
-      return { type: brinde ? 'brinde' : 'cortesia', v, m, t, id, brinde };
+      try { url = new URL(texto); } catch { url = new URL(texto, window.location.origin); }
+      const p = url.searchParams;
+      const v = parseFloat(p.get('v'));
+      const b = parseInt(p.get('b'), 10);
+      const t = parseInt(p.get('t'), 10);
+      const id = p.get('id') || '';
+      const brinde = p.get('brinde') === '1';
+      if (isNaN(v) || isNaN(b) || isNaN(t) || b < 1) return null;
+      return { v, b, t, id, brinde };
     } catch { return null; }
   }
   function mostrarResultado(texto) {
@@ -1767,156 +937,84 @@
     card.classList.remove('invalid', 'redeemed');
     const $status = card.querySelector('.status');
     const $big = card.querySelector('.big');
-    const $minlbl = card.querySelector('.minlbl');
+    const $biglbl = card.querySelector('.biglbl');
     const $sub = card.querySelector('.sub');
     const $metas = card.querySelectorAll('.meta');
     const $btnResg = document.getElementById('btn-resgatar');
-    const $btnCarimbar5 = document.getElementById('btn-carimbar-5');
-    const $btnCarimbar10 = document.getElementById('btn-carimbar-10');
-    const $btnPremio = document.getElementById('btn-resgatar-premio');
-    const $notas = card.querySelector('.card-notas');
     $btnResg.style.display = 'none';
-    $btnResg.disabled = false;
-    $btnResg.textContent = '✓ Resgatar Cortesia';
-    $btnCarimbar5.style.display = 'none';
-    $btnCarimbar10.style.display = 'none';
-    $btnPremio.style.display = 'none';
-    $notas.style.display = 'none';
-    $notas.innerHTML = '';
     cortesiaAtual = null;
-    cartaoLidoAtual = null;
 
     const data = parsePayload(texto);
     if (!data) {
       card.classList.add('invalid');
       $status.textContent = '⛔ QR INVÁLIDO';
       $big.textContent = 'Não reconhecido';
-      $minlbl.textContent = '';
-      $sub.textContent = 'Este QR não é uma cortesia válida.';
+      $biglbl.textContent = '';
+      $sub.textContent = 'Este QR não é uma cortesia do Balão Premiado.';
       $metas[0].innerHTML = ''; $metas[1].innerHTML = '';
-    } else if (data.type === 'card') {
-      // ====== Cartão de Fidelidade ======
-      const cartao = getCartao(data.id);
-      if (!cartao) {
-        card.classList.add('invalid');
-        $status.textContent = '⚠ CARTÃO DESCONHECIDO';
-        $big.textContent = data.nome || '—';
-        $minlbl.textContent = 'NÃO CADASTRADO';
-        $sub.textContent = 'Este cartão não foi criado neste celular.';
-        $metas[0].innerHTML = ''; $metas[1].innerHTML = '';
-      } else {
-        cartaoLidoAtual = cartao;
-        const completo = cartao.selos >= SELOS_OBJETIVO;
-        const telHtml = cartao.telefone
-          ? `<strong>${escapeHTML(cartao.telefone)}</strong>`
-          : `Cartão de <strong>${escapeHTML(cartao.nome)}</strong>`;
-        if (completo) {
-          $status.textContent = '🎁 PRÊMIO LIBERADO';
-          $big.textContent = cartao.nome;
-          $minlbl.textContent = `${cartao.selos}/${SELOS_OBJETIVO} SELOS — ${PREMIO_MIN} MIN`;
-          $sub.textContent = `Massagem de ${PREMIO_MIN} minutos liberada!`;
-          $metas[0].innerHTML = telHtml;
-          const pr = cartao.premiosResgatados || 0;
-          $metas[1].innerHTML = pr > 0
-            ? `${pr} prêmio${pr === 1 ? '' : 's'} já resgatado${pr === 1 ? '' : 's'}`
-            : '';
-          $btnPremio.style.display = '';
-        } else {
-          $status.textContent = '⭐ CARTÃO FIDELIDADE';
-          $big.textContent = cartao.nome;
-          $minlbl.textContent = `${cartao.selos}/${SELOS_OBJETIVO} SELOS`;
-          const faltam = SELOS_OBJETIVO - cartao.selos;
-          $sub.textContent = `Faltam ${faltam} selo${faltam === 1 ? '' : 's'} pra ganhar massagem.`;
-          $metas[0].innerHTML = telHtml;
-          $metas[1].innerHTML = cartao.ultimoSelo
-            ? `Último selo: <strong>${formatData(cartao.ultimoSelo)}</strong>`
-            : '';
-          $btnCarimbar5.style.display = '';
-          $btnCarimbar10.style.display = '';
-        }
-        // Anotações visíveis se houver
-        if (cartao.notas) {
-          $notas.style.display = '';
-          $notas.innerHTML = `<span class="lbl">ANOTAÇÕES</span>${escapeHTML(cartao.notas)}`;
-        }
-      }
     } else {
-      // ====== Cortesia ou Brinde ======
-      const validade = data.t + 24*3600*1000;
+      const validade = data.t + VALIDADE_MS;
       const expirado = Date.now() > validade;
       const resg = buscarResgate(data.id);
-      const origemHtml = data.brinde
-        ? '🎁 Brinde do admin'
-        : `Compra: <strong>${formatBRL(data.v)}</strong>`;
-
+      const origem = data.brinde ? '🎁 Brinde do admin' : `Compra: <strong>${formatBRL(data.v)}</strong>`;
+      const lbl = data.b === 1 ? 'BALÃO PREMIADO' : 'BALÕES PREMIADOS';
       if (expirado) {
         card.classList.add('invalid');
         $status.textContent = '⛔ EXPIRADA';
-        $big.textContent = `${data.m} min`;
-        $minlbl.textContent = '';
+        $big.textContent = `${data.b} ${data.b === 1 ? 'balão' : 'balões'}`;
+        $biglbl.textContent = '';
         $sub.textContent = 'Esta cortesia passou de 24 horas.';
-        $metas[0].innerHTML = origemHtml;
+        $metas[0].innerHTML = origem;
         $metas[1].innerHTML = `Expirou em <strong>${formatData(validade)}</strong>`;
       } else if (resg) {
         card.classList.add('redeemed');
-        $status.textContent = '⚠ JÁ RESGATADA';
-        $big.textContent = `${data.m}`;
-        $minlbl.textContent = `MIN — JÁ UTILIZADA`;
-        $sub.textContent = `Cortesia já foi usada.`;
-        $metas[0].innerHTML = origemHtml;
-        $metas[1].innerHTML = `Resgatada em <strong>${formatData(resg.at)}</strong>`;
+        $status.textContent = '⚠ JÁ FOI USADA';
+        $big.textContent = `${data.b}`;
+        $biglbl.textContent = lbl + ' — JÁ ESTOURADO';
+        $sub.textContent = 'Esta cortesia já foi utilizada.';
+        $metas[0].innerHTML = origem;
+        $metas[1].innerHTML = `Usada em <strong>${formatData(resg.at)}</strong>`;
       } else {
-        $status.textContent = data.brinde ? '🎁 BRINDE LIBERADO' : '✅ CORTESIA VÁLIDA';
-        $big.textContent = `${data.m}`;
-        $minlbl.textContent = `MINUTOS DE MASSAGEM`;
-        $sub.textContent = '"Aproveite o seu momento."';
-        $metas[0].innerHTML = origemHtml;
+        $status.textContent = data.brinde ? '🎁 BRINDE LIBERADO' : '🎈 CORTESIA VÁLIDA';
+        $big.textContent = `${data.b}`;
+        $biglbl.textContent = lbl;
+        $sub.textContent = data.b === 1 ? 'Pode estourar o balão!' : 'Pode estourar os balões!';
+        $metas[0].innerHTML = origem;
         $metas[1].innerHTML = `Válido até <strong>${formatData(validade)}</strong>`;
         cortesiaAtual = data;
         $btnResg.style.display = '';
+        confete(40);
       }
     }
-
     document.getElementById('ler-scanner').style.display = 'none';
     document.getElementById('ler-resultado').style.display = '';
   }
-
   function confirmarResgate() {
     if (!cortesiaAtual) return;
     marcarResgate(cortesiaAtual.id, cortesiaAtual);
     const card = document.getElementById('resultado-card');
     card.classList.remove('invalid');
     card.classList.add('redeemed');
-    card.querySelector('.status').textContent = '✓ CORTESIA RESGATADA';
-    card.querySelector('.sub').textContent = 'Resgatada agora. Boa massagem!';
-    card.querySelector('.minlbl').textContent = 'MIN — JÁ UTILIZADA';
-    const $metas = card.querySelectorAll('.meta');
-    $metas[1].innerHTML = `Resgatada em <strong>${formatData(Date.now())}</strong>`;
-    const $btn = document.getElementById('btn-resgatar');
-    $btn.disabled = true;
-    $btn.textContent = '✓ Resgatada';
-    $btn.style.display = 'none';
+    card.querySelector('.status').textContent = '✓ BALÃO ESTOURADO';
+    card.querySelector('.sub').textContent = 'Marcado como usado. Boa sorte no prêmio! 🎉';
+    card.querySelectorAll('.meta')[1].innerHTML = `Usada em <strong>${formatData(Date.now())}</strong>`;
+    document.getElementById('btn-resgatar').style.display = 'none';
     cortesiaAtual = null;
   }
 
+  /* ====== Abertura direta por URL (QR lido por leitor genérico) ====== */
   (function checarURL() {
     const params = new URLSearchParams(window.location.search);
-    const isCortesia = params.has('v') && params.has('m') && params.has('t');
-    const isCard = params.get('card') === '1';
-    if (isCortesia || isCard) {
+    if (params.has('v') && params.has('b') && params.has('t')) {
       show('ler');
-      setTimeout(() => {
-        if (scanner) { try { scanner.stop().then(()=>{ scanner=null; }); } catch(e){} }
-        mostrarResultado(window.location.href);
-      }, 200);
+      setTimeout(() => mostrarResultado(window.location.href), 200);
     }
   })();
 
-  // ====== Service Worker (PWA) ======
+  /* ====== Service Worker (PWA) ====== */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .catch(err => console.warn('SW falhou:', err));
+      navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW falhou:', err));
     });
   }
 </script>

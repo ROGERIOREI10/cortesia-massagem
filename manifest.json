@@ -1,13 +1,13 @@
 {
-  "name": "Cortesia Massagem · Trono da Massagem",
-  "short_name": "Cortesia",
-  "description": "Cortesia de massagem · Trono da Massagem · Guarapari-ES",
+  "name": "Balão Premiado · Dia das Crianças",
+  "short_name": "Balão Premiado",
+  "description": "Cortesia do Balão Premiado · Princesinha Shop e Reizinho Brinquedos · Guarapari-ES",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0a0502",
-  "theme_color": "#1a0d05",
+  "background_color": "#7fd0ff",
+  "theme_color": "#4cc9f0",
   "lang": "pt-BR",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
