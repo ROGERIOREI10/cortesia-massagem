@@ -92,7 +92,7 @@
   }
 
   /* ====== CONFETE ====== */
-  .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
+  .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; } /* atrás do card: nunca cobre o QR */
   .confetti i {
     position: absolute; top: -12px;
     width: 9px; height: 14px; border-radius: 2px;
@@ -270,64 +270,75 @@
     font-size: 13px; font-weight: 700; text-align: center;
   }
 
-  /* ====== CARD DO PRÊMIO ====== */
+  /* ====== CARD DO PRÊMIO (compacto: cabe inteiro na tela do celular pra foto) ====== */
+  body.result-mode header.brand, body.result-mode .back { display: none; }
+  body.result-mode .app { padding-top: 10px; }
   .premio-card {
+    --qr: clamp(140px, 26vh, 180px);
     position: relative; overflow: hidden;
     background: var(--white);
-    border-radius: 28px;
-    padding: 22px 18px 18px;
-    margin-bottom: 14px;
-    box-shadow: 0 18px 44px rgba(43,45,92,.2);
+    border-radius: 24px;
+    padding: 10px 12px 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 14px 36px rgba(43,45,92,.2);
     border: 5px solid transparent;
     background-image:
       linear-gradient(var(--white), var(--white)),
       linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
     background-origin: border-box; background-clip: padding-box, border-box;
   }
-  .headline { text-align: center; line-height: 1; }
+  .ribbon {
+    display: block; width: fit-content; margin: 0 auto 6px;
+    font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 11px; letter-spacing: .08em;
+    color: var(--ink); background: var(--yellow); padding: 3px 12px; border-radius: 999px;
+  }
+  .headline { display: flex; align-items: center; justify-content: center; gap: 10px; line-height: 1; }
+  .headline .txt { text-align: left; max-width: 210px; }
+  .headline.center .txt { text-align: center; }
   .headline .line-1 {
     font-family: 'Baloo 2', cursive; font-weight: 800;
-    font-size: 20px; color: var(--muted); display: block; letter-spacing: .08em;
+    font-size: 14px; color: var(--muted); display: block; letter-spacing: .1em;
   }
   .headline .big-num {
     font-family: 'Baloo 2', cursive; font-weight: 800;
-    font-size: 96px; line-height: .95; display: block;
+    font-size: clamp(44px, 8vh, 58px); line-height: .95; display: block;
     background: linear-gradient(180deg, var(--red) 0%, var(--orange) 100%);
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 4px 0 rgba(43,45,92,.12));
+    filter: drop-shadow(0 3px 0 rgba(43,45,92,.12));
   }
   .headline .line-2 {
     font-family: 'Baloo 2', cursive; font-weight: 800;
-    font-size: 30px; color: var(--ink); display: block; margin-top: 2px;
+    font-size: 21px; color: var(--ink); display: block; margin-top: 2px; line-height: 1;
   }
-  .illus { width: 190px; margin: 10px auto 6px; display: block; animation: popIn .7s cubic-bezier(.2,1.4,.4,1) both; }
+  .illus { width: auto; height: clamp(64px, 11vh, 90px); flex-shrink: 0; display: block; animation: popIn .7s cubic-bezier(.2,1.4,.4,1) both; }
   @keyframes popIn { from { transform: scale(.4) rotate(-8deg); opacity: 0; } to { transform: none; opacity: 1; } }
 
   .qr-frame {
-    margin: 10px auto 12px; width: fit-content; padding: 12px;
-    background: var(--white); border-radius: 18px;
-    border: 4px dashed var(--blue);
+    margin: 6px auto 6px; width: fit-content; padding: 7px;
+    background: var(--white); border-radius: 14px;
+    border: 3px dashed var(--blue);
   }
-  .qr-frame img, .qr-frame canvas { display: block; }
+  .qr-frame img, .qr-frame canvas { display: block; width: var(--qr) !important; height: var(--qr) !important; }
 
-  .onde { background: #f3f8ff; border-radius: 16px; padding: 12px 14px; margin-top: 4px; }
-  .onde .t { font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 13px; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; text-align: center; margin: 0 0 6px; }
-  .onde .local { padding: 5px 0; border-color: #e1ebfa; }
-  .onde .local .where { font-size: 13px; }
-  .onde .local .shop { font-size: 12px; }
+  .onde { background: #f3f8ff; border-radius: 12px; padding: 7px 10px; margin-top: 2px; }
+  .onde .t { font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 10.5px; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; text-align: center; margin: 0 0 3px; }
+  .onde .row { font-size: 11.5px; line-height: 1.25; color: var(--muted); font-weight: 700; padding: 2.5px 0; }
+  .onde .row b { color: var(--ink); }
 
   .meta-row {
-    display: flex; justify-content: space-around; gap: 12px;
-    margin-top: 12px; padding-top: 12px; border-top: 2px dashed #e8eef7;
+    display: flex; justify-content: space-around; gap: 10px;
+    margin-top: 7px; padding-top: 7px; border-top: 2px dashed #e8eef7;
   }
   .meta-item { text-align: center; }
-  .meta-item .k { font-size: 10px; letter-spacing: .15em; color: var(--muted); font-weight: 800; text-transform: uppercase; }
-  .meta-item .v { font-family: 'Baloo 2', cursive; font-weight: 800; color: var(--ink); font-size: 17px; margin-top: 2px; }
+  .meta-item .k { font-size: 9px; letter-spacing: .15em; color: var(--muted); font-weight: 800; text-transform: uppercase; }
+  .meta-item .v { font-family: 'Baloo 2', cursive; font-weight: 800; color: var(--ink); font-size: 14px; margin-top: 1px; }
   .footer-brand {
-    text-align: center; margin-top: 12px; padding-top: 10px;
-    font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 11px;
-    letter-spacing: .12em; color: var(--muted); text-transform: uppercase;
+    text-align: center; margin-top: 6px; padding-top: 5px; border-top: 2px dashed #e8eef7;
+    font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 9.5px;
+    letter-spacing: .1em; color: var(--muted); text-transform: uppercase;
   }
+  .actions { display: flex; gap: 10px; }
+  .actions .btn { margin-bottom: 0; padding: 11px 12px; font-size: 16px; }
 
   /* ====== SCANNER ====== */
   .scanner-frame {
@@ -494,12 +505,8 @@
 
     <div id="gerar-resultado" style="display:none;">
       <article class="premio-card">
+        <span class="ribbon">🎈 BALÃO PREMIADO · DIA DAS CRIANÇAS</span>
         <div class="headline">
-          <span class="line-1">VOCÊ GANHOU</span>
-          <span class="big-num" id="g-b">1</span>
-          <span class="line-2" id="g-b-lbl">BALÃO PREMIADO!</span>
-        </div>
-
         <svg class="illus" viewBox="0 0 240 250" xmlns="http://www.w3.org/2000/svg">
           <!-- fios -->
           <g stroke="#2b2d5c" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7">
@@ -536,25 +543,33 @@
           <circle cx="36" cy="60" r="3" fill="#b388ff"/>
           <circle cx="206" cy="90" r="3" fill="#ff9f1c"/>
         </svg>
+          <div class="txt">
+            <span class="line-1">VOCÊ GANHOU</span>
+            <span class="big-num" id="g-b">1</span>
+            <span class="line-2" id="g-b-lbl">BALÃO PREMIADO!</span>
+          </div>
+        </div>
 
         <div class="qr-frame"><div id="qrcode"></div></div>
 
         <div class="onde">
           <p class="t">Vá estourar em uma dessas lojas</p>
-          <div class="local"><span class="pin">📍</span><div><div class="where">Centro Comercial da Onda</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
-          <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Praia do Morro</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
-          <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Mar</div><div class="shop">Nova loja <b>Reizinho Brinquedos</b></div></div></div>
+          <div class="row">📍 <b>Centro Comercial da Onda</b> · Princesinha Shop</div>
+          <div class="row">📍 <b>Shopping Praia do Morro</b> · Princesinha Shop</div>
+          <div class="row">📍 <b>Shopping Mar</b> · Reizinho Brinquedos (loja nova)</div>
         </div>
 
         <div class="meta-row">
           <div class="meta-item"><div class="k">Compra</div><div class="v" id="g-valor">R$ 100,00</div></div>
           <div class="meta-item"><div class="k">Válido até</div><div class="v" id="g-validade">—</div></div>
         </div>
-        <div class="footer-brand">Dia das Crianças · Princesinha Shop · Reizinho Brinquedos</div>
+        <div class="footer-brand">Princesinha Shop · Reizinho Brinquedos</div>
       </article>
 
-      <button class="btn outline" onclick="novaCortesia()">Nova Cortesia</button>
-      <button class="btn ghost" onclick="show('home')">Voltar ao início</button>
+      <div class="actions">
+        <button class="btn outline" onclick="novaCortesia()">Nova cortesia</button>
+        <button class="btn ghost" onclick="show('home')">Início</button>
+      </div>
     </div>
   </section>
 
@@ -623,26 +638,31 @@
 
     <div id="brinde-resultado" style="display:none;">
       <article class="premio-card">
-        <div class="headline">
-          <span class="line-1">VOCÊ GANHOU</span>
-          <span class="big-num" id="b-b">1</span>
-          <span class="line-2" id="b-b-lbl">BALÃO PREMIADO!</span>
+        <span class="ribbon">🎈 BALÃO PREMIADO · DIA DAS CRIANÇAS</span>
+        <div class="headline center">
+          <div class="txt">
+            <span class="line-1">VOCÊ GANHOU</span>
+            <span class="big-num" id="b-b">1</span>
+            <span class="line-2" id="b-b-lbl">BALÃO PREMIADO!</span>
+          </div>
         </div>
         <div class="qr-frame"><div id="qrcode-brinde"></div></div>
         <div class="onde">
           <p class="t">Vá estourar em uma dessas lojas</p>
-          <div class="local"><span class="pin">📍</span><div><div class="where">Centro Comercial da Onda</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
-          <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Praia do Morro</div><div class="shop">Loja <b>Princesinha Shop</b></div></div></div>
-          <div class="local"><span class="pin">📍</span><div><div class="where">Shopping Mar</div><div class="shop">Nova loja <b>Reizinho Brinquedos</b></div></div></div>
+          <div class="row">📍 <b>Centro Comercial da Onda</b> · Princesinha Shop</div>
+          <div class="row">📍 <b>Shopping Praia do Morro</b> · Princesinha Shop</div>
+          <div class="row">📍 <b>Shopping Mar</b> · Reizinho Brinquedos (loja nova)</div>
         </div>
         <div class="meta-row">
           <div class="meta-item"><div class="k">Tipo</div><div class="v">🎁 BRINDE</div></div>
           <div class="meta-item"><div class="k">Válido até</div><div class="v" id="b-validade">—</div></div>
         </div>
-        <div class="footer-brand">Dia das Crianças · Princesinha Shop · Reizinho Brinquedos</div>
+        <div class="footer-brand">Princesinha Shop · Reizinho Brinquedos</div>
       </article>
-      <button class="btn outline" onclick="show('brinde')">Novo Brinde</button>
-      <button class="btn ghost" onclick="show('admin')">Voltar ao admin</button>
+      <div class="actions">
+        <button class="btn outline" onclick="show('brinde')">Novo brinde</button>
+        <button class="btn ghost" onclick="show('admin')">Admin</button>
+      </div>
     </div>
   </section>
 </div>
@@ -716,6 +736,7 @@
 
   /* ====== Navegação ====== */
   function show(id) {
+    document.body.classList.remove('result-mode');
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     if (id === 'ler') prepararScanner();
@@ -812,6 +833,7 @@
 
   /* ====== Gerar ====== */
   function resetGerarForm() {
+    document.body.classList.remove('result-mode');
     document.getElementById('gerar-form').style.display = '';
     document.getElementById('gerar-resultado').style.display = 'none';
     document.getElementById('gerar-erro').innerHTML = '';
@@ -835,12 +857,14 @@
     document.getElementById('g-validade').textContent = formatData(ts + VALIDADE_MS);
     document.getElementById('gerar-form').style.display = 'none';
     document.getElementById('gerar-resultado').style.display = '';
+    document.body.classList.add('result-mode');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     confete();
   }
 
   /* ====== Brinde (admin) ====== */
   function resetBrinde() {
+    document.body.classList.remove('result-mode');
     document.getElementById('brinde-form').style.display = '';
     document.getElementById('brinde-resultado').style.display = 'none';
   }
@@ -853,6 +877,7 @@
     document.getElementById('b-validade').textContent = formatData(ts + VALIDADE_MS);
     document.getElementById('brinde-form').style.display = 'none';
     document.getElementById('brinde-resultado').style.display = '';
+    document.body.classList.add('result-mode');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     confete();
   }
