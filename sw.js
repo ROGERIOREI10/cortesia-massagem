@@ -1,9 +1,9 @@
-const CACHE = 'balao-v1';
+const CACHE = 'balao-v2';
 const ASSETS = [
   './',
   './index.html',
-  './icon-192.png',
-  './icon-512.png',
+  './icon-balao-192.png',
+  './icon-balao-512.png',
   './manifest.json'
 ];
 
