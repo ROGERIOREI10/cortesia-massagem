@@ -7,7 +7,9 @@ em outubro/2026 para o evento BALÃO PREMIADO.
 
 - **Regras:** ≥ R$100 = 1 balão · ≥ R$200 = 2 balões · QR vale 24h
 - **Onde estourar:** Centro Comercial da Onda (Princesinha Shop) · Shopping Praia do Morro
-  (Princesinha Shop) · Shopping Mar (Reizinho Brinquedos, loja nova)
+  (Princesinha Shop). Shopping Mar (Reizinho Brinquedos) foi removido em 11/10/2026 porque
+  não teve balões — pode voltar; as lojas aparecem em 4 lugares (home, card gerado, card do
+  brinde, tela do cliente) + rodapé dos cards.
 - **Produção:** https://rogeriorei10.github.io/cortesia-massagem/ (GitHub Pages, push em main = publica em ~1 min)
 - Sem backend: payload do QR é a própria URL com query params (`?v=&b=&t=&id=` + `&brinde=1`).
   Libs via CDN (`qrcodejs` + `html5-qrcode` com fallback entre 3 CDNs).
